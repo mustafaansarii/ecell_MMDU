@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../auth/authSlice'
 
 const navigation = [
   { name: 'About', href: '#about' },
@@ -18,6 +20,8 @@ const navigation = [
 export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation();
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (location.hash) {
@@ -27,6 +31,18 @@ export default function NavBar() {
       }
     }
   }, [location]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token && !user) {
+      dispatch({ type: 'auth/setUser', payload: { token } });
+    }
+  }, [dispatch, user]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    window.location.href = '/';
+  };
 
   return (
     <>
@@ -64,9 +80,18 @@ export default function NavBar() {
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <a href="#" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
-                Log in <span aria-hidden="true">&rarr;</span>
-              </a>
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-red-500 cursor-pointer"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link to="/login" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
+                  Log in <span aria-hidden="true">&rarr;</span>
+                </Link>
+              )}
             </div>
           </nav>
           <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -104,12 +129,21 @@ export default function NavBar() {
                     ))}
                   </div>
                   <div className="py-6">
-                    <a
-                      href="#"
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
-                    >
-                      Log in
-                    </a>
+                    {user ? (
+                      <button
+                        onClick={handleLogout}
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        Logout
+                      </button>
+                    ) : (
+                      <Link
+                        to="/login"
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                      >
+                        Log in
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

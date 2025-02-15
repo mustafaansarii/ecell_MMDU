@@ -50,7 +50,7 @@ export default function Gallery() {
   };
 
   return (
-    <div className="py-8 sm:py-16 -mt-10">
+    <div className="py-8 sm:py-16 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="group relative mb-8 sm:mb-16">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-white md:text-5xl">

@@ -11,7 +11,10 @@ import Collabrators from './component/Collabrators'
 import Contact from './component/contact'
 import Footer from './component/Footer'
 import TeamPage from './pages/team'
-
+import Login from './pages/Login'
+import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import GalleryPage from './pages/gallery'
 function App() {
   return (
     <Router>
@@ -52,6 +55,35 @@ function App() {
             path="/team"
             element={
               <TeamPage />
+            }
+          />
+          {/* Gallery Route */}
+          <Route
+            path="/gallery"
+            element={
+              <GalleryPage />
+            }
+          />
+
+          {/* Login Route */}
+          <Route
+            path="/login"
+            element={
+              <Login />
+            }
+          />
+          {/* Register Route */}
+          <Route
+            path="/register"
+            element={
+              <Register />
+            }
+          />
+          {/* Forgot Password Route */}
+          <Route
+            path="/forgot-password"
+            element={
+              <ForgotPassword />
             }
           />
 

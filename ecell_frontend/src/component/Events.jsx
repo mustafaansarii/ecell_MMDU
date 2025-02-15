@@ -47,7 +47,7 @@ export default function Events() {
   };
 
   return (
-    <div className="py-8 sm:py-16 -mt-20">
+    <div className="py-8 sm:py-16 -mt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="group relative mb-8 sm:mb-16">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-white md:text-5xl">
@@ -60,7 +60,7 @@ export default function Events() {
         </div>
         
         {/* Event Type Selector */}
-        <div className="flex justify-center mb-8 sm:mb-12 -mt-10">
+        <div className="flex justify-center mb-8 sm:mb-12 mt-10">
           <div className="inline-flex rounded-full shadow-sm bg-gray-100 dark:bg-gray-800 p-1">
             <button
               onClick={() => { setEventType('upcoming'); setActiveEvent(0); }}
@@ -92,15 +92,15 @@ export default function Events() {
             disabled={activeEvent === 0}
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 disabled:opacity-50"
           >
-            <FaChevronLeft className="w-4 h-4" />
+            <FaChevronLeft className="w-4 h-4 text-gray-900 dark:text-white" />
           </button>
-          <span className="text-sm font-medium">{activeEvent + 1} / {currentEvents.length}</span>
+          <span className="text-sm font-medium text-gray-900 dark:text-white">{activeEvent + 1} / {currentEvents.length}</span>
           <button
             onClick={() => handleEventNavigation('next')}
             disabled={activeEvent === currentEvents.length - 1}
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 disabled:opacity-50"
           >
-            <FaChevronRight className="w-4 h-4" />
+            <FaChevronRight className="w-4 h-4 text-gray-900 dark:text-white" />
           </button>
         </div>
 
