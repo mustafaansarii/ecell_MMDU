@@ -1,1 +1,1 @@
-web: gunicorn ecell_backend.wsgi:application 
+web: gunicorn auth_project.wsgi:application 
