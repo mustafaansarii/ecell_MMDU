@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -56,6 +56,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -208,3 +209,6 @@ IS_LOCAL = os.getenv('IS_LOCAL', 'True').lower() == 'true'
 FRONTEND_URL = os.getenv('LOCAL_FRONTEND_URL') if IS_LOCAL else os.getenv('LIVE_FRONTEND_URL')
 GOOGLE_LOGIN_REDIRECT_URI = os.getenv('LOCAL_GOOGLE_LOGIN_REDIRECT_URI') if IS_LOCAL else os.getenv('LIVE_GOOGLE_LOGIN_REDIRECT_URI')
 FRONTEND_CALLBACK_URL = os.getenv('LOCAL_FRONTEND_CALLBACK_URL') if IS_LOCAL else os.getenv('LIVE_FRONTEND_CALLBACK_URL')
+
+# Add at the bottom
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
