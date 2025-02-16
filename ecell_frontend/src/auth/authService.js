@@ -87,4 +87,34 @@ const resetPassword = async (data) => {
   }
 };
 
-export { sendOTP, signup, login, sendOTPForgetPass, resetPassword };
+// Google OAuth Login
+const googleLogin = async (code) => {
+  try {
+    const response = await axios.post(`${API_URL}/google/login/`, { code });
+    if (response.data) {
+      localStorage.setItem('access_token', response.data.access);
+      localStorage.setItem('refresh_token', response.data.refresh);
+    }
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error || 'Google login failed');
+    }
+    throw new Error('Error during Google login');
+  }
+};
+
+// Google OAuth Signup
+const googleSignup = async (code) => {
+  try {
+    const response = await axios.post(`${API_URL}/google/signup/`, { code });
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      throw new Error(error.response.data.error || 'Google signup failed');
+    }
+    throw new Error('Error during Google signup');
+  }
+};
+
+export { sendOTP, signup, login, sendOTPForgetPass, resetPassword, googleLogin, googleSignup };

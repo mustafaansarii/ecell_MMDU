@@ -1,6 +1,34 @@
 import { FaLightbulb, FaUsers, FaHandHoldingUsd, FaChartLine, FaNetworkWired, FaTrophy } from 'react-icons/fa';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchInitiatives } from '../features/initiatives/initiativesSlice';
 
 export default function Initiatives() {
+  const dispatch = useDispatch();
+  const { initiatives, status, error } = useSelector(state => state.initiatives);
+
+  useEffect(() => {
+    dispatch(fetchInitiatives());
+  }, [dispatch]);
+
+  if (status === 'loading') {
+    return <div>Loading initiatives...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
+  // Hardcoded icon mapping
+  const iconComponents = [
+    <FaLightbulb className="w-6 h-6 text-white" />,
+    <FaUsers className="w-6 h-6 text-white" />,
+    <FaHandHoldingUsd className="w-6 h-6 text-white" />,
+    <FaChartLine className="w-6 h-6 text-white" />,
+    <FaNetworkWired className="w-6 h-6 text-white" />,
+    <FaTrophy className="w-6 h-6 text-white" />
+  ];
+
   return (
     <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-30">
       <div className="mx-auto max-w-[1200px]">
@@ -15,51 +43,14 @@ export default function Initiatives() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {[
-            {
-              icon: <FaLightbulb className="w-6 h-6 text-white" />,
-              title: 'Startup Incubator',
-              subtitle: 'Eureka!',
-              description: '12-week intensive program providing mentorship, resources, and funding opportunities for early-stage startups'
-            },
-            {
-              icon: <FaUsers className="w-6 h-6 text-white" />,
-              title: 'Mentorship Program',
-              subtitle: 'Eureka! Junior',
-              description: 'Connect with industry experts and successful entrepreneurs for personalized guidance'
-            },
-            {
-              icon: <FaHandHoldingUsd className="w-6 h-6 text-white" />,
-              title: 'Seed Funding',
-              subtitle: 'Campus Executive',
-              description: 'Annual competition offering grants up to ₹5 lakh for promising student ventures'
-            },
-            {
-              icon: <FaChartLine className="w-6 h-6 text-white" />,
-              title: 'Business Workshops',
-              subtitle: 'Illuminate',
-              description: 'Weekly sessions on market research, financial planning, and growth strategies'
-            },
-            {
-              icon: <FaNetworkWired className="w-6 h-6 text-white" />,
-              title: 'Industry Networking',
-              subtitle: 'EnB',
-              description: 'Quarterly meetups with investors and corporate partners for collaboration opportunities'
-            },
-            {
-              icon: <FaTrophy className="w-6 h-6 text-white" />,
-              title: 'Annual Pitch Fest',
-              subtitle: 'NEC',
-              description: 'Flagship event with ₹10 lakh prize pool and investor demo day'
-            }
-          ].map((initiative, index) => (
+          {initiatives.map((initiative, index) => (
             <div
-              key={initiative.title}
+              key={initiative.id}
               className="bg-white/5 p-6 sm:p-8 rounded-2xl backdrop-blur-sm border border-black/20 dark:border-gray-200/20 transition-all hover:-translate-y-1.5 hover:shadow-lg dark:hover:shadow-gray-700/20"
             >
               <div className="flex items-start gap-4 sm:gap-6">
                 <div className="p-3 sm:p-4 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg">
-                  {initiative.icon}
+                  {iconComponents[index % iconComponents.length]}
                 </div>
                 <div className="flex-1">
                   <div className="text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent mb-1">
@@ -76,8 +67,6 @@ export default function Initiatives() {
             </div>
           ))}
         </div>
-
-     
       </div>
     </div>
   )

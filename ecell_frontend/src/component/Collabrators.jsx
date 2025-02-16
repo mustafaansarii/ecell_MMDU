@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCollaborators } from '../features/collaborators/collaboratorsSlice';
 
 export default function Collaborators() {
   const [width, setWidth] = useState(window.innerWidth);
+  const dispatch = useDispatch();
+  const { collaborators, status, error } = useSelector(state => state.collaborators);
 
-  const collaborators = [
-    { logo: 'https://api.mmumullana.org/uploads/img/L1_1_83_14886.webp?=44', name: 'Collaborator 1' },
-    { logo: 'https://mmdu-ecell.vercel.app/assets/images/iit_bombay.png', name: 'IIT Bombay' },
-    { logo: 'https://mmdu-ecell.vercel.app/assets/images/nec.png', name: 'NEC' },
-    { logo: 'https://ecell.iith.ac.in/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdwsverefw%2Fimage%2Fupload%2Fc_scale%2Cw_1125%2Fv1666905522%2Fecell%2Funstop_wlsi8w.png&w=2048&q=75', name: 'Unstop' },
-    { logo: 'https://mmdu-ecell.vercel.app/assets/images/nec.png', name: 'NEC' },
-    { logo: 'https://mmdu-ecell.vercel.app/assets/images/nec.png', name: 'NEC' },
-    // Add more collaborators as needed
-  ];
+  useEffect(() => {
+    dispatch(fetchCollaborators());
+  }, [dispatch]);
 
   // Duplicate the collaborators array to create seamless looping
   const doubleCollaborators = [...collaborators, ...collaborators];
@@ -59,7 +57,12 @@ export default function Collaborators() {
       <div className="marquee-container">
         <div className="marquee-content">
           {doubleCollaborators.map((collaborator, index) => (
-            <img key={index} src={collaborator.logo} alt={collaborator.name} className="h-16 sm:h-20 mx-4" />
+            <img 
+              key={`${collaborator.id}-${index}`}
+              src={collaborator.logo_url} 
+              alt={collaborator.name} 
+              className="h-16 sm:h-20 mx-4" 
+            />
           ))}
         </div>
       </div>

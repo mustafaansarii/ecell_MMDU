@@ -80,21 +80,25 @@ export default function TeamPage() {
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className='text-center'>
-          <div className="flex items-center justify-start mb-4">
-            <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition-colors">
-              <FaHome className="mr-2" />
-              <span className="text-sm">Home</span>
-            </Link>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-sm text-purple-500">Team</span>
+        <div className="flex flex-col items-center">
+          <div className="w-full flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition-colors">
+                <FaHome className="mr-2" />
+                <span className="text-sm">Home</span>
+              </Link>
+              <span className="mx-2 text-gray-400">/</span>
+              <span className="text-sm text-purple-500">Team</span>
+            </div>
           </div>
-          
-          <h1 className='font-bold text-5xl text-purple-400'>Meet Our Team</h1>
-          <p className='text-gray-600 dark:text-gray-300 text-sm'>this is our team who are working for the betterment of the college and the students</p>
+          <div className="text-center ">
+            <h1 className='font-bold text-5xl text-purple-400'>Meet Our Team</h1>
+            <p className='text-gray-600 dark:text-gray-300 text-sm'>this is our team who are working for the betterment of the college and the students</p>
+          </div>
         </div>
+        
         {/* Faculty Advisors Section */}
-        <div className="group relative mb-16 text-center mt-20">
+        <div className="group relative mb-16 text-center mt-5">
           <div className="absolute -inset-1 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
           <h2 className="relative  sm:text-4xl font-bold text-purple-400 md:text-4xl">
             Faculty Advisors
@@ -145,7 +149,7 @@ export default function TeamPage() {
         {[DOMAIN_HEADS, Managers].map((team, teamIndex) => (
           <div key={teamIndex} className="group relative mb-16 text-center">
             <div className="absolute -inset-1 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-            <h2 className="relative text-4xl sm:text-5xl font-bold text-purple-400 md:text-6xl">
+            <h2 className="relative  sm:text-4xl font-bold text-purple-400 md:text-4xl ">
               {team === DOMAIN_HEADS ? 'Domain Leaders' : 'Management Team'}
             </h2>
             <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">

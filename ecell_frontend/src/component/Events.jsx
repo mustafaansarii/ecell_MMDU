@@ -1,41 +1,27 @@
-import { useState } from 'react';
 import { FaCalendarAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchEvents } from '../features/events/eventsSlice';
 
 export default function Events() {
   const [eventType, setEventType] = useState('upcoming');
   const [activeEvent, setActiveEvent] = useState(0);
+  const dispatch = useDispatch();
+  const { events, status, error } = useSelector(state => state.events);
 
-  const upcomingEvents = [
-    {
-      title: 'E-Summit',
-      date: 'March 15, 2023',
-      description: 'Our E-Summit features industry leaders, successful entrepreneurs, and domain experts who share their insights and experiences.',
-      cta: 'Apply',
-    },
-    {
-      title: 'Start-Up Fair',
-      date: 'April 5, 2023',
-      description: 'The Start-Up Fair is a great opportunity for students to showcase their innovative ideas and connect with potential investors and mentors.',
-      cta: 'Register',
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
-  const pastEvents = [
-    {
-      title: 'E-Networking',
-      date: 'February 20, 2023',
-      description: 'Our E-Networking event provided a platform for students to interact with alumni and industry professionals, fostering valuable connections.',
-      cta: 'View Recap',
-    },
-    {
-      title: 'Campus Ambassador Program',
-      date: 'January 15, 2023',
-      description: 'The Campus Ambassador Program recognized and rewarded students who actively promoted entrepreneurship and innovation on campus.',
-      cta: 'Learn More',
-    },
-  ];
+  if (status === 'loading') {
+    return <div>Loading events...</div>;
+  }
 
-  const currentEvents = eventType === 'upcoming' ? upcomingEvents : pastEvents;
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
+  const currentEvents = events?.filter(event => event.event_type === eventType) || [];
   const currentEvent = currentEvents[activeEvent];
 
   const handleEventNavigation = (direction) => {
@@ -67,7 +53,7 @@ export default function Events() {
               className={`px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-full transition-all ${
                 eventType === 'upcoming'
                   ? 'bg-gray-900 text-white shadow-lg dark:bg-white dark:text-gray-900'
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
+                  : 'text-gray-5 00 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-gray-700/50'
               }`}
             >
               Upcoming
@@ -144,9 +130,15 @@ export default function Events() {
                       {currentEvent.description}
                     </p>
                   </div>
-                  <button className="w-full sm:w-auto self-start bg-gradient-to-r from-purple-600 to-blue-500 hover:to-blue-600 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-transform hover:scale-105 text-sm sm:text-base">
-                    {currentEvent.cta} →
-                  </button>
+                  {eventType === 'upcoming' ? (
+                    <button className="w-full sm:w-auto self-start bg-gradient-to-r from-purple-600 to-blue-500 hover:to-blue-600 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-transform hover:scale-105 text-sm sm:text-base">
+                      Apply Now →
+                    </button>
+                  ) : (
+                    <a href="/gallery" className="w-full sm:w-auto self-start bg-gradient-to-r from-purple-600 to-blue-500 hover:to-blue-600 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-full transition-transform hover:scale-105 text-sm sm:text-base text-center">
+                      Check Wrap Up →
+                    </a>
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-6 sm:py-8">

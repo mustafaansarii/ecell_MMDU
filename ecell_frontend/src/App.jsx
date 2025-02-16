@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
 import NavBar from './component/NavBar'
@@ -15,7 +15,30 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import GalleryPage from './pages/gallery'
+import GoogleCallback from './pages/GoogleCallback'
+import LoadingAnimation from './components/LoadingAnimation'
+
 function App() {
+  const [isLoading, setIsLoading] = useState(() => {
+    // Check if user has visited before
+    const hasVisited = localStorage.getItem('hasVisited');
+    return !hasVisited;
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        localStorage.setItem('hasVisited', 'true');
+        setIsLoading(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <LoadingAnimation />;
+  }
+
   return (
     <Router>
       <div>
@@ -86,6 +109,8 @@ function App() {
               <ForgotPassword />
             }
           />
+
+          <Route path="/api/auth/google/callback" element={<GoogleCallback />} />
 
         </Routes>
       </div>

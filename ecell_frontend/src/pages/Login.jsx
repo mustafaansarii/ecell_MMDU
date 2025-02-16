@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../auth/authSlice';
+import { loginUser, googleLoginUser } from '../auth/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaLock, FaEnvelope } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import config from '../config';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -13,7 +14,13 @@ const Login = () => {
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +34,14 @@ const Login = () => {
       } else {
         toast.error('Invalid credentials. Please check your email and password.');
       }
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      window.location.href = `${config.Backend_Api}${config.GoogleLoginUrl}`;
+    } catch (error) {
+      toast.error('Google login failed');
     }
   };
 
@@ -52,6 +67,19 @@ const Login = () => {
             Sign in to continue to your account
           </p>
         </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          <img 
+            src="https://www.google.com/favicon.ico" 
+            alt="Google logo" 
+            className="w-5 h-5 mr-2"
+          />
+          Continue with Google
+        </button>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-5">

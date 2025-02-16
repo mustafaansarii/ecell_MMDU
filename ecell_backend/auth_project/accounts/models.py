@@ -35,6 +35,7 @@ class CustomUser(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     otp = models.CharField(max_length=6, blank=True, null=True)
     otp_created_at = models.DateTimeField(null=True)
+    is_oauth = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -53,3 +54,7 @@ class CustomUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    def set_unusable_password(self):
+        self.is_oauth = True
+        super().set_unusable_password()

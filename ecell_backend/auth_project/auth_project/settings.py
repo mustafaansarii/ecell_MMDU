@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'accounts',
     'corsheaders',
+    'social_django',
+    'ecellpage',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -167,8 +169,42 @@ SIMPLE_JWT = {
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
     os.getenv('FRONTEND_URL'),
-    os.getenv('LINK_URL'),
+    os.getenv('LIVE_URL'),
 ]
 
 # Optional: If you want to allow all origins (not recommended for production)
 # CORS_ALLOW_ALL_ORIGINS = True
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
+
+# Add these to handle the pipeline
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
+# Google OAuth2 Settings
+SOCIAL_AUTH_REDIRECT_URI = os.getenv('GOOGLE_LOGIN_REDIRECT_URI')
+FRONTEND_CALLBACK_URL = os.getenv('FRONTEND_CALLBACK_URL')
+
+# Determine which environment to use
+IS_LOCAL = os.getenv('IS_LOCAL', 'True').lower() == 'true'
+
+# Set URLs based on environment
+FRONTEND_URL = os.getenv('LOCAL_FRONTEND_URL') if IS_LOCAL else os.getenv('LIVE_FRONTEND_URL')
+GOOGLE_LOGIN_REDIRECT_URI = os.getenv('LOCAL_GOOGLE_LOGIN_REDIRECT_URI') if IS_LOCAL else os.getenv('LIVE_GOOGLE_LOGIN_REDIRECT_URI')
+FRONTEND_CALLBACK_URL = os.getenv('LOCAL_FRONTEND_CALLBACK_URL') if IS_LOCAL else os.getenv('LIVE_FRONTEND_CALLBACK_URL')

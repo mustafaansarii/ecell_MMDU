@@ -10,6 +10,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth import authenticate
+from django.shortcuts import redirect
+from django.conf import settings
+from django.urls import reverse
+from urllib.parse import urlencode
 
 class SendOTPView(APIView):
     def post(self, request):
@@ -204,3 +208,95 @@ class ForgetPasswordView(APIView):
         user.save()
         
         return Response({"message": "Password updated successfully"}, status=status.HTTP_200_OK)
+
+class GoogleLogin(APIView):
+    def get(self, request):
+        redirect_uri = os.getenv('LOCAL_GOOGLE_LOGIN_REDIRECT_URI') if settings.IS_LOCAL else os.getenv('LIVE_GOOGLE_LOGIN_REDIRECT_URI')
+        return redirect(f'{os.getenv("GOOGLE_AUTH_URL")}?'
+                       f'redirect_uri={redirect_uri}&'
+                       f'client_id={settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY}&'
+                       f'access_type=offline&'
+                       f'response_type=code&'
+                       f'prompt=consent&'
+                       f'scope=email profile')
+
+class GoogleCallback(APIView):
+    def get(self, request):
+        code = request.GET.get('code')
+        if not code:
+            return Response({'error': 'Authorization code not found'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            import requests
+            
+            # Exchange authorization code for tokens
+            token_url = os.getenv("GOOGLE_TOKEN_URL")
+            redirect_uri = os.getenv('LOCAL_GOOGLE_LOGIN_REDIRECT_URI') if settings.IS_LOCAL else os.getenv('LIVE_GOOGLE_LOGIN_REDIRECT_URI')
+            data = {
+                'code': code,
+                'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+                'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+                'redirect_uri': redirect_uri,
+                'grant_type': 'authorization_code'
+            }
+            
+            token_response = requests.post(token_url, data=data)
+            token_response.raise_for_status()
+            tokens = token_response.json()
+            
+            # Get user info using access token
+            userinfo_url = os.getenv("GOOGLE_USERINFO_URL")
+            headers = {
+                'Authorization': f'Bearer {tokens["access_token"]}'
+            }
+            userinfo_response = requests.get(userinfo_url, headers=headers)
+            userinfo_response.raise_for_status()
+            user_data = userinfo_response.json()
+            
+            email = user_data.get('email')
+            if not email:
+                return Response({'error': 'Email not provided by Google'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if user exists
+            user = CustomUser.objects.filter(email=email).first()
+            
+            if not user:
+                # Create new user
+                user = CustomUser.objects.create_user(
+                    email=email,
+                    full_name=user_data.get('name', ''),
+                    password=None,  # No password for OAuth users
+                    is_active=True,
+                    is_oauth=True
+                )
+            elif not user.is_oauth:
+                # Convert existing user to OAuth user
+                user.set_unusable_password()
+                user.is_oauth = True
+                user.save()
+            
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Create redirect URL with tokens and user data as parameters
+            frontend_url = settings.FRONTEND_CALLBACK_URL
+            params = {
+                'access': access_token,
+                'refresh': refresh_token,
+                'user_id': user.id,
+                'email': user.email,
+                'full_name': user.full_name,
+                'is_active': str(user.is_active).lower(),
+                'is_verified': str(user.is_active).lower()
+            }
+            redirect_url = f"{frontend_url}?{urlencode(params)}"
+            
+            return redirect(redirect_url)
+            
+        except requests.exceptions.HTTPError as e:
+            error_response = e.response.json() if e.response else str(e)
+            return Response({'error': f'Google authentication failed: {error_response}'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { sendOTP, signup, login } from './authService';
+import { sendOTP, signup, login, sendOTPForgetPass, resetPassword, googleLogin, googleSignup } from './authService';
 
 const initialState = {
   user: localStorage.getItem('access_token') ? { token: localStorage.getItem('access_token') } : null,
@@ -51,6 +51,34 @@ export const loginUser = createAsyncThunk(
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const googleLoginUser = createAsyncThunk(
+  'auth/googleLogin',
+  async (code, thunkAPI) => {
+    try {
+      const response = await googleLogin(code);
+      if (response?.access && response?.refresh) {
+        localStorage.setItem('access_token', response.access);
+        localStorage.setItem('refresh_token', response.refresh);
+      }
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const googleSignupUser = createAsyncThunk(
+  'auth/googleSignup',
+  async (code, thunkAPI) => {
+    try {
+      const response = await googleSignup(code);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -114,6 +142,27 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(googleLoginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(googleLoginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(googleLoginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(googleSignupUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(googleSignupUser.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(googleSignupUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

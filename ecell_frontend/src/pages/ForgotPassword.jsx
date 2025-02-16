@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaEnvelope, FaLock, FaShieldAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
@@ -14,6 +14,14 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const validatePassword = (password) => {
     const hasUpperCase = /[A-Z]/.test(password);

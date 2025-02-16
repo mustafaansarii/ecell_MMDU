@@ -1,35 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight, FaExpand } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchGallery } from '../features/gallery/gallerySlice';
 
 export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const dispatch = useDispatch();
+  const { galleryItems, status, error } = useSelector(state => state.gallery);
 
-  const galleryItems = [
-    {
-      image: 'https://mmdu-ecell.vercel.app/Events/assets/images/day1_admin.jpeg',
-      date: 'March 15, 2023',
-      description: 'E-Summit opening ceremony'
-    },
-    {
-      image: 'https://mmdu-ecell.vercel.app/Events/assets/images/day1_admin.jpeg',
-      date: 'March 16, 2023',
-      description: 'Startup pitch competition'
-    },
-    {
-      image: 'https://mmdu-ecell.vercel.app/Events/assets/images/day1_admin.jpeg',
-      date: 'March 17, 2023',
-      description: 'Networking session with investors'
-    },
-    {
-      image: 'https://mmdu-ecell.vercel.app/Events/assets/images/day1_admin.jpeg',
-      date: 'March 18, 2023',
-      description: 'Closing ceremony and awards'
-    }
-  ];
+  useEffect(() => {
+    dispatch(fetchGallery());
+  }, [dispatch]);
 
   // Only take first 4 items
-  const displayedItems = galleryItems.slice(0, 4);
+  const displayedItems = galleryItems?.slice(0, 4) || [];
 
   const handleNavigation = (direction) => {
     if (direction === 'prev' && activeIndex > 0) {
@@ -50,8 +35,8 @@ export default function Gallery() {
   };
 
   return (
-    <div className="py-8 sm:py-16 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-15">
+      <div className="mx-auto max-w-[1200px]">
         <div className="group relative mb-8 sm:mb-16">
         <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-white md:text-5xl">
             Gallery
@@ -67,7 +52,7 @@ export default function Gallery() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 -mt-4">
           {displayedItems.map((item, index) => (
             <div
-              key={index}
+              key={item.id}
               className="relative group rounded-2xl overflow-hidden cursor-pointer active:shadow-lg sm:hover:shadow-lg dark:active:shadow-gray-700/20 dark:sm:hover:shadow-gray-700/20 transition-all border-2 border-transparent active:border-purple-500 sm:hover:border-purple-500"
               onClick={() => {
                 setActiveIndex(index);
@@ -75,9 +60,9 @@ export default function Gallery() {
               }}
             >
               <img
-                src={item.image}
+                src={item.image_url}
                 alt={`Gallery ${index + 1}`}
-                className="w-full h-[300px] sm:h-[400px] object-cover transition-transform duration-300 active:scale-105 sm:group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/20 sm:opacity-0 active:opacity-100 sm:group-hover:opacity-100 transition-opacity" />
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/50 text-white sm:opacity-0 active:opacity-100 sm:group-hover:opacity-100 transition-opacity">

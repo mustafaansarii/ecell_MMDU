@@ -41,21 +41,29 @@ export default function NavBar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    window.location.href = '/';
+    window.location.href = '/login';
   };
 
   return (
     <>
       <div className="dark:text-white">
-        <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-sm ">
-          <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
+        <header className="fixed inset-x-0 top-0 z-50 backdrop-blur-sm">
+          <nav aria-label="Global" className="flex items-center justify-between p-4 lg:px-6">
             <div className="flex lg:flex-1">
-              <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-1">
-                <div className="text-3xl font-bold relative -top-1">E</div>
-                <div className="flex flex-col items-center">
-                  <div className="text-lg font-bold leading-none mb-0.5">-CELL</div>
-                  <div className="text-[6px] tracking-widest text-center w-full leading-none">M M D U</div>
-                </div>
+              <a href="#" className="-m-1 p-1 flex items-center">
+              <div className="flex flex-col items-center">
+                    <div className="flex items-baseline">
+                      <div className="logo-text text-blue-600 font-bold text-lg">E </div>
+                      <div className="logo-text text-gray-800 dark:text-white font-bold text-lg -ml-1">&nbsp;CELL</div>
+                    </div>
+                    <div className="divider-container flex items-center mt-[-0.4rem]">
+                      <div className="w-3 h-[1px] bg-gray-800 dark:bg-white"></div>
+                      <span className="university-text mx-1 text-gray-800 dark:text-white text-[0.5rem] font-semibold tracking-wide">
+                        MMDU
+                      </span>
+                      <div className="w-3 h-[1px] bg-gray-800 dark:bg-white"></div>
+                    </div>
+                  </div>
               </a>
             </div>
             <div className="flex lg:hidden">
@@ -73,7 +81,7 @@ export default function NavBar() {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+                  className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-blue-600 transition-colors duration-200"
                 >
                   {item.name}
                 </Link>
@@ -85,7 +93,7 @@ export default function NavBar() {
                   onClick={handleLogout}
                   className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-red-500 cursor-pointer"
                 >
-                  Logout
+                  Logout &rarr;
                 </button>
               ) : (
                 <Link to="/login" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
@@ -98,11 +106,19 @@ export default function NavBar() {
             <div className="fixed inset-0 z-50 bg-black/50" />
             <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 dark:bg-black sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
               <div className="flex items-center justify-between">
-                <a href="#" className="-m-1.5 p-1.5 flex items-center space-x-1">
-                  <div className="text-3xl font-bold relative -top-1">E</div>
+                <a href="#" className="-m-1.5 p-1.5 flex items-center">
                   <div className="flex flex-col items-center">
-                    <div className="text-lg font-bold leading-none mb-0.5">-CELL</div>
-                    <div className="text-[6px] tracking-widest text-center w-full leading-none">M M D U</div>
+                    <div className="flex items-baseline">
+                      <div className="logo-text text-blue-600 font-bold text-xl">E </div>
+                      <div className="logo-text text-gray-800 dark:text-white font-bold text-xl -ml-1">&nbsp;CELL</div>
+                    </div>
+                    <div className="divider-container flex items-center mt-[-0.5rem]">
+                      <div className="w-4 h-[1px] bg-gray-800 dark:bg-white"></div>
+                      <span className="university-text mx-1 text-gray-800 dark:text-white text-[0.6rem] font-semibold tracking-wide">
+                        MMDU
+                      </span>
+                      <div className="w-4 h-[1px] bg-gray-800 dark:bg-white"></div>
+                    </div>
                   </div>
                 </a>
                 <button
@@ -121,7 +137,7 @@ export default function NavBar() {
                       <Link
                         key={item.name}
                         to={item.href}
-                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
+                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-black dark:text-white hover:text-blue-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {item.name}
@@ -134,7 +150,7 @@ export default function NavBar() {
                         onClick={handleLogout}
                         className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
                       >
-                        Logout
+                        Logout &rarr;
                       </button>
                     ) : (
                       <Link

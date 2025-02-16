@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import config from '../config';
 
 export default function Contact() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,10 +20,54 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    
+    // Check if user is logged in
+    if (!localStorage.getItem('access_token')) {
+      toast.error('Please login to send a message');
+      navigate('/login');
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.Backend_Api}/api/ecell/contact/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Success:', result);
+      toast.success('Message sent successfully!');
+      setFormData({
+        name: '',
+        email: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to send message. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -93,9 +142,17 @@ export default function Contact() {
             <div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:to-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-transform hover:scale-105"
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:to-blue-600 text-white font-semibold px-6 py-3 rounded-lg transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading}
               >
-                Send Message
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span className="ml-2">Sending...</span>
+                  </div>
+                ) : (
+                  'Send Message'
+                )}
               </button>
             </div>
           </form>

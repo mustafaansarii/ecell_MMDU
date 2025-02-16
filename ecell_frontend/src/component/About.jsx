@@ -1,40 +1,78 @@
 import { FaRocket, FaUsers, FaHandshake } from 'react-icons/fa';
-
-// About section data
-const aboutData = {
-  title: "About E-Cell MMDU",
-  description: "The Entrepreneurship Cell at Maharishi Markandeshwar University is a student-driven platform fostering innovation and business acumen. We empower aspiring entrepreneurs through mentorship, resources, and real-world opportunities."
-};
-
-// Vision and Mission data
-const goalsData = [
-  {
-    title: "Vision",
-    description: "To create an ecosystem where innovative ideas transform into sustainable businesses and shape future industry leaders."
-  },
-  {
-    title: "Mission",
-    description: "Nurture entrepreneurial mindset through workshops, mentorship programs, and incubation support while bridging academia with industry needs."
-  }
-];
-
-// Stats data
-const statsData = [
-  {
-    title: "Startups Launched",
-    value: "50+"
-  },
-  {
-    title: "Students Engaged",
-    value: "1000+"
-  },
-  {
-    title: "Industry Partners",
-    value: "20+"
-  }
-];
+import { useEffect, useState } from 'react';
+import config from '../config';
 
 export default function About() {
+  const [aboutData, setAboutData] = useState({
+    title: "About E-Cell MMDU",
+    description: "",
+    vision: "",
+    mission: ""
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [statsData, setStatsData] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch(`${config.Backend_Api}/api/ecell/about-us/`);
+        const data = await response.json();
+        setAboutData({
+          title: "About E-Cell MMDU",
+          description: data.what_is_ECell,
+          vision: data.vision,
+          mission: data.mission
+        });
+      } catch (error) {
+        console.error('Error fetching about data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAboutData();
+  }, []);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`${config.Backend_Api}/api/ecell/stats/`);
+        
+        // First check if response is HTML
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          const text = await response.text();
+          console.error('Received non-JSON response:', text);
+          throw new Error('Server returned non-JSON response');
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setStatsData(data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+        setError(error.message);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const goalsData = [
+    {
+      title: "Vision",
+      description: aboutData.vision
+    },
+    {
+      title: "Mission",
+      description: aboutData.mission
+    }
+  ];
+
   return (
     <div className="relative isolate overflow-hidden px-4 sm:px-6 py-16 sm:py-24 lg:px-8 mt-3 sm:-mt-52">
       <div className="mx-auto max-w-[1200px]">
@@ -90,21 +128,27 @@ export default function About() {
         {/* Stats section */}
         <div className="w-full mx-auto mt-8 sm:mt-12">
           <div className="p-4 sm:p-8">
-            <div className="flex flex-row justify-between gap-2 sm:gap-6 p-2 sm:p-4 overflow-x-auto">
-              {statsData.map(({ title, value }, index) => (
-                <div key={title} className="flex-none sm:flex-1 text-center min-w-[100px] sm:min-w-0">
-                  <div className="p-2 sm:p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg inline-block mb-2">
-                    {title === "Startups Launched" && <FaRocket className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
-                    {title === "Students Engaged" && <FaUsers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
-                    {title === "Industry Partners" && <FaHandshake className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
+            {isLoading ? (
+              <div className="text-center">Loading stats...</div>
+            ) : error ? (
+              <div className="text-center text-red-500">Error: {error}</div>
+            ) : (
+              <div className="flex flex-row justify-between gap-2 sm:gap-6 p-2 sm:p-4 overflow-x-auto">
+                {statsData.map(({ title, value, icon_name }, index) => (
+                  <div key={`${title}-${index}`} className="flex-none sm:flex-1 text-center min-w-[100px] sm:min-w-0">
+                    <div className="p-2 sm:p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg inline-block mb-2">
+                      {icon_name === "FaRocket" && <FaRocket className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
+                      {icon_name === "FaUsers" && <FaUsers className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
+                      {icon_name === "FaHandshake" && <FaHandshake className="w-5 h-5 sm:w-6 sm:h-6 text-white" />}
+                    </div>
+                    <dt className="text-xs sm:text-base font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</dt>
+                    <dd className="text-xl sm:text-5xl font-bold text-gray-900 dark:text-white">
+                      {value}
+                    </dd>
                   </div>
-                  <dt className="text-xs sm:text-base font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</dt>
-                  <dd className="text-xl sm:text-5xl font-bold text-gray-900 dark:text-white">
-                    {value}
-                  </dd>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
