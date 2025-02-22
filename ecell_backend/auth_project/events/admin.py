@@ -34,7 +34,7 @@ class RegistrationForm(forms.ModelForm):
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     form = EventForm
-    list_display = ('name', 'start_date', 'end_date', 'status')
+    list_display = ('name', 'start_date', 'end_date', 'status', 'registration_fields_preview')
     list_filter = ('status',)
     search_fields = ('name', 'description')
     date_hierarchy = 'start_date'
@@ -64,10 +64,16 @@ class EventAdmin(admin.ModelAdmin):
         try:
             import json
             fields = json.loads(value)
-            for field_name in fields.keys():
+            
+            # Validate field types
+            allowed_types = ['text', 'email', 'phone', 'number', 'url']
+            for field_name, field_type in fields.items():
                 if ' ' in field_name:
-                    raise forms.ValidationError(f"Field name '{field_name}' contains spaces. Remove spaces from field names.")
-            return value
+                    raise forms.ValidationError(f"Field name '{field_name}' contains spaces. Use underscores instead.")
+                if field_type not in allowed_types:
+                    raise forms.ValidationError(f"Invalid type '{field_type}' for field '{field_name}'. Allowed types: {', '.join(allowed_types)}")
+            
+            return json.dumps(fields, indent=4)
         except json.JSONDecodeError:
             raise forms.ValidationError("Invalid JSON format for registration fields.")
 

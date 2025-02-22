@@ -82,18 +82,31 @@ def register_for_event(request):
         return JsonResponse({'error': 'Only POST requests are allowed'}, status=405)
     
     try:
-        # Parse JSON data from request body
         data = json.loads(request.body)
+        event = Event.objects.filter(status='active').first()
         
-        # Get the upcoming event
-        event = Event.objects.filter(status='upcoming').first()
         if not event:
-            return JsonResponse({'error': 'No upcoming event found'}, status=404)
+            return JsonResponse({'error': 'No active event found'}, status=404)
+        
+        # Get required fields from admin configuration and convert to list
+        required_fields = list(event.registration_fields.keys()) if event.registration_fields else []
+        
+        # Include email in required fields if it's not already there
+        if 'email' not in required_fields:
+            required_fields.append('email')
+        
+        # Validate required fields
+        missing_fields = [field for field in required_fields if field not in data or not data[field]]
+        
+        if missing_fields:
+            return JsonResponse({
+                'error': 'Missing required fields',
+                'missing_fields': missing_fields,
+                'required_fields': list(required_fields)
+            }, status=400)
         
         # Get user data from request
         email = data.get('email')
-        if not email:
-            return JsonResponse({'error': 'Email is required'}, status=400)
         
         # Get or create user
         User = get_user_model()
@@ -106,32 +119,7 @@ def register_for_event(request):
         )
         
         # Prepare registration data
-        registration_data = {
-            'email': email,
-            'full_name': data.get('full_name', ''),
-            'phone': data.get('phone', ''),
-            'age': data.get('age', ''),
-            'interests': data.get('interests', ''),
-            'comments': data.get('comments', '')
-        }
-        
-        # Validate registration data against event's registration fields
-        if event.registration_fields:
-            required_fields = set(event.registration_fields.keys())
-            provided_fields = set(registration_data.keys())
-            
-            # Check if all required fields are present and not empty
-            missing_fields = [
-                field for field in required_fields 
-                if not registration_data.get(field)
-            ]
-            
-            if missing_fields:
-                return JsonResponse({
-                    'error': 'Missing required fields',
-                    'missing_fields': missing_fields,
-                    'required_fields': list(required_fields)
-                }, status=400)
+        registration_data = {field: data.get(field) for field in required_fields}
         
         # Create or update registration
         registration, reg_created = Registration.objects.get_or_create(

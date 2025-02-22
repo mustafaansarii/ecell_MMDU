@@ -25,10 +25,10 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">Explore</h3>
             <ul className="space-y-3 text-sm">
-              <li><a href="/events" className="text-gray-6 00 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Events</a></li>
-              <li><a href="/initiatives" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Initiatives</a></li>
-              <li><a href="/gallery" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Gallery</a></li>
-              <li><a href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Contact</a></li>
+              <li><a href="/" className="text-gray-6 00 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Events</a></li>
+              <li><a href="/" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Initiatives</a></li>
+              <li><a href="/" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Gallery</a></li>
+              <li><a href="/" className="text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-300">Contact</a></li>
             </ul>
           </div>
 

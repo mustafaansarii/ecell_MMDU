@@ -6,7 +6,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../auth/authSlice'
-
+import AlertBanner from './aleart_banner' 
 const navigation = [
   { name: 'About', href: '#about' },
   { name: 'Initiatives', href: '#initiatives' },
@@ -19,6 +19,7 @@ const navigation = [
 export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isAlertVisible, setIsAlertVisible] = useState(true)
   const location = useLocation();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -52,10 +53,15 @@ export default function NavBar() {
     window.location.href = '/login';
   };
 
+  const handleAlertClose = () => {
+    setIsAlertVisible(false);
+  };
+
   return (
     <>
       <div className="dark:text-white">
-        <header className={`fixed inset-x-0 top-0 z-50 backdrop-blur-lg transition-all duration-300 ${isScrolled ? 'shadow-sm' : ''}`}>
+        {isAlertVisible && <AlertBanner onClose={handleAlertClose}/>}
+        <header className={`fixed inset-x-0 ${isAlertVisible ? 'top-[40px]' : 'top-0'} z-50 backdrop-blur-lg transition-all duration-300 ${isScrolled ? 'shadow-sm' : ''}`}>
           <nav aria-label="Global" className="flex items-center justify-between p-4 lg:px-8 max-w-7xl mx-auto">
             <div className="flex lg:flex-1">
               <a href="#" className="-m-1 p-1 flex items-center hover:scale-105 transition-transform duration-200">
@@ -66,7 +72,7 @@ export default function NavBar() {
                   </div>
                   <div className="divider-container flex items-center mt-[-0.4rem]">
                     <div className="w-3 h-[1px] bg-gray-800 dark:bg-white transition-colors"></div>
-                    <span className="university-text mx-1 text-gray-8 00 dark:text-white text-[0.5rem] font-semibold tracking-wide hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                    <span className="university-text mx-1 text-gray-800 dark:text-white text-[0.5rem] font-semibold tracking-wide hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
                       MMDU
                     </span>
                     <div className="w-3 h-[1px] bg-gray-800 dark:bg-white transition-colors"></div>
@@ -78,7 +84,7 @@ export default function NavBar() {
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(true)}
-                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-7 00 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 <span className="sr-only">Open main menu</span>
                 <Bars3Icon aria-hidden="true" className="size-6" />
@@ -89,7 +95,7 @@ export default function NavBar() {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="relative text-sm/6 font-semibold text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w极0 after:h-[2px] after:bg-blue-600 dark:after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
+                  className="relative text-sm/6 font-semibold text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-blue-600 dark:after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
                 >
                   {item.name}
                 </Link>
@@ -99,7 +105,7 @@ export default function NavBar() {
               {user ? (
                 <button
                   onClick={handleLogout}
-                  className="text-sm/6 font-semib极old text-gray-900 dark:text-gray-200 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200 flex items-center gap-1"
+                  className="text-sm/6 font-semibold text-gray-900 dark:text-gray-200 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-200 flex items-center gap-1"
                 >
                   Logout <span className="inline-block transition-transform hover:translate-x-1">→</span>
                 </button>
@@ -114,10 +120,14 @@ export default function NavBar() {
             </div>
           </nav>
           <div className="border-b border-gray-200 dark:border-white"></div>
-          <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
+          <Dialog 
+            open={mobileMenuOpen} 
+            onClose={() => setMobileMenuOpen(false)} 
+            className="lg:hidden"
+          >
             <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" />
             <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 dark:bg-gray-900 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-              <div className="极flex items-center justify-between">
+              <div className="flex items-center justify-between">
                 <a href="#" className="-m-1.5 p-1.5 flex items-center">
                   <div className="flex flex-col items-center">
                     <div className="flex items-baseline">
@@ -136,14 +146,14 @@ export default function NavBar() {
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors absolute right-6 top-6"
                 >
                   <span className="sr-only">Close menu</span>
                   <XMarkIcon aria-hidden="true" className="size-6" />
                 </button>
               </div>
               <div className="mt-6 flow-root">
-                <div className="-my-6 divide-y divide-gray-500/10">
+                <div className="-my-6 divide-y divide-gray-5 00/10">
                   <div className="space-y-2 py-6">
                     {navigation.map((item) => (
                       <Link
@@ -179,6 +189,7 @@ export default function NavBar() {
           </Dialog>
         </header>
       </div>
+    
     </>
   )
 }

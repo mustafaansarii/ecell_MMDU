@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from django.core.mail import send_mail
 from rest_framework import status
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -42,3 +43,32 @@ class ContactSubmissionView(APIView):
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TeamList(APIView):
+    def get(self, request):
+        # Use select_related/prefetch_related if there were related models
+        # Use only() to fetch only necessary fields
+        team = Team.objects.all().only(
+            'team_type', 
+            'name', 
+            'course_year', 
+            'role', 
+            'description', 
+            'linkedin_link', 
+            'contact_no', 
+            'img_link'
+        )
+        
+        # Use caching for frequently accessed data
+        cache_key = 'team_list_data'
+        cached_data = cache.get(cache_key)
+        
+        if cached_data:
+            return Response(cached_data)
+            
+        serializer = TeamSerializer(team, many=True)
+        
+        # Cache the data for 1 hour (3600 seconds)
+        cache.set(cache_key, serializer.data, timeout=3600)
+        
+        return Response(serializer.data)

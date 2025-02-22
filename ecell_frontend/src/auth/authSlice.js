@@ -6,6 +6,7 @@ const initialState = {
   loading: false,
   error: null,
   isVerified: false,
+  logoutTimer: null
 };
 
 export const sendUserOTP = createAsyncThunk(
@@ -95,9 +96,20 @@ const authSlice = createSlice({
       state.user = null;
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
+      if (state.logoutTimer) {
+        clearTimeout(state.logoutTimer);
+      }
     },
     setUser: (state, action) => {
       state.user = action.payload;
+      if (state.logoutTimer) {
+        clearTimeout(state.logoutTimer);
+      }
+      state.logoutTimer = setTimeout(() => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        state.user = null;
+      }, 24 * 60 * 60 * 1000);
     }
   },
   extraReducers: (builder) => {

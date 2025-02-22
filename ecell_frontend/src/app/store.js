@@ -10,6 +10,7 @@ const preloadedState = {
     loading: false,
     error: null,
     isVerified: false,
+    logoutTimer: null
   },
   gallery: {
     galleryItems: [],

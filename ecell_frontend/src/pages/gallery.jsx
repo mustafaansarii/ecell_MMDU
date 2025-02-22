@@ -9,18 +9,26 @@ export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
   const dispatch = useDispatch();
   const { galleryItems, status, error } = useSelector(state => state.gallery);
+
+  // Calculate pagination values
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = galleryItems.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(galleryItems.length / itemsPerPage);
 
   // Fetch data only once on component mount
   useEffect(() => {
     if (galleryItems.length === 0) {
       dispatch(fetchGallery());
     }
-  }, [dispatch]); // Removed status/error from dependencies
+  }, [dispatch]);
 
   const handleNavigation = (direction) => {
-    if (galleryItems.length === 0) return; // Prevent navigation if no items
+    if (galleryItems.length === 0) return;
     
     setActiveIndex(prev => {
       if (direction === 'prev') return prev > 0 ? prev - 1 : galleryItems.length - 1;
@@ -37,6 +45,11 @@ export default function Gallery() {
     if (e.target.classList.contains('bg-black/90')) {
       toggleFullscreen();
     }
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -66,46 +79,89 @@ export default function Gallery() {
         </div>
         <p className='text-center text-gray-500 text-xs sm:text-sm mb-6'>This is E-Cell MMDU gallery page where you'll find all the images of our events</p>
         
-        {/* Loading Spinner */}
+        {/* Loading State */}
         {status === 'loading' && (
-          <div className="flex justify-center items-center min-h-[300px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="relative aspect-square">
+                <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="h-4 w极3/4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse mb-2"></div>
+                  <div className="h-3 w-full bg-gray-300 dark:bg-gray-600 rounded animate-pulse"></div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
         {/* Gallery Grid */}
         {status !== 'loading' && (
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {galleryItems.map((item) => (
-              <div 
-                key={item.id}
-                className="relative overflow-hidden shadow-md group aspect-square cursor-pointer"
-                onClick={() => setSelectedImage(item.image_url)}
-              >
-                <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse">
-                  <img
-                    src={item.image_url}
-                    alt={`Gallery Image ${item.id}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onLoad={(e) => e.target.classList.remove('hidden')}
-                    onError={(e) => {
-                      e.target.classList.add('hidden');
-                      e.target.nextElementSibling?.classList.remove('hidden');
-                    }}
-                  />
-                  <div className="hidden absolute inset-0 flex items-center justify-center text-gray-500">
-                    <span>Image not available</span>
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {currentItems.map((item) => (
+                <div 
+                  key={item.id}
+                  className="relative overflow-hidden shadow-md group aspect-square cursor-pointer"
+                  onClick={() => setSelectedImage(item.image_url)}
+                >
+                  <div className="w-full h-full bg-gray-200 dark:bg-gray-700">
+                    <img
+                      src={item.image_url}
+                      alt={`Gallery Image ${item.id}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onLoad={(e) => e.target.classList.remove('hidden')}
+                      onError={(e) => {
+                        e.target.classList.add('hidden');
+                        e.target.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                    <div className="hidden absolute inset-0 flex items-center justify-center text-gray-500">
+                      <span>Image not available</span>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 text-white">
+                    <p className="text-xs sm:text-sm opacity-90">{item.event_date}</p>
+                    <p className="text-base sm:text-lg font-semibold mt-1">{item.description}</p>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 text-white">
-                  <p className="text-xs sm:text-sm opacity-90">{item.event_date}</p>
-                  <p className="text-base sm:text-lg font-semibold mt-1">{item.description}</p>
-                </div>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8 space-x-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`px-4 py-2 text-sm font-medium ${
+                      currentPage === page
+                        ? 'text-white bg-blue-500'
+                        : 'text-gray-500 bg-white border border-gray-300'
+                    } rounded-lg hover:bg-gray-100`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
 

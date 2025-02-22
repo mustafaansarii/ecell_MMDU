@@ -32,8 +32,8 @@ export default function Hero() {
         {/* Announcement Banner - Hidden on mobile */}
         <div className="hidden sm:block mb-4 sm:mb-8 animate-fade-in">
           <div className="inline-flex flex-col sm:flex-row items-center justify-center rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-200 ring-1 ring-gray-900/10 dark:ring-gray-100/20 ">
-            <span className="text-center sm:text-left">🚀 Join our upcoming Startup Bootcamp</span>
-            <a href="#" className="sm:ml-2 mt-1 sm:mt-0 font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 flex items-center">
+              <span className="text-center sm:text-left">🚀 Join our  Ecell Team to innovate and grow</span>
+            <a href="/joinecell" className="sm:ml-2 mt-1 sm:mt-0 font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 flex items-center">
               Register now <span className="ml-1 transform transition-transform group-hover:translate-x-1">→</span>
             </a>
           </div>

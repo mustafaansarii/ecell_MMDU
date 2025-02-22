@@ -9,4 +9,9 @@ class GallerySerializer(serializers.ModelSerializer):
 class ContactSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactSubmission
-        fields = ['name', 'email', 'message'] 
+        fields = ['name', 'email', 'message']
+
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = '__all__' 

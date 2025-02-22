@@ -1,6 +1,12 @@
 from django.contrib import admin
-from .models import Gallery, ContactSubmission
-from django.contrib import admin
+from .models import Gallery, ContactSubmission, Team
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'team_type', 'role', 'course_year', 'img_link')
+    list_filter = ('team_type',)
+    search_fields = ('name', 'role')
+
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('event_date',)
@@ -9,8 +15,6 @@ class GalleryAdmin(admin.ModelAdmin):
 class ContactSubmissionAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'created_at')
     search_fields = ('name', 'email', 'message')
-
-
 
 admin.site.site_header = "ECELL ADMIN PANEL"
 admin.site.site_title = "ECELL ADMIN"

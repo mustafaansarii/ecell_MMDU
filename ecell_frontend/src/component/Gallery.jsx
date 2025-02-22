@@ -38,6 +38,39 @@ export default function Gallery() {
     );
   };
 
+  // Loading state
+  if (status === 'loading') {
+    return (
+      <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-15">
+        <div className="mx-auto max-w-[1200px]">
+          <div className="group relative mb-8 sm:mb-16">
+            <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <div className="h-1.5 w-20 sm:w-28 mt-3 sm:mt-6 bg-gray-200 dark:bg-gray-700 rounded-full" />
+            <div className="mt-4 h-4 w-full max-w-2xl bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+            <div className="mt-2 h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
+
+          {/* Flatlist Carousel Skeleton */}
+          <div className="relative w-full max-w-6xl mx-auto overflow-hidden">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="relative aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse">
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="h-4 w-3/4 bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
+                  <div className="mt-2 h-3 w-full bg-gray-300 dark:bg-gray-600 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* View More Skeleton */}
+          <div className="text-center mt-8">
+            <div className="inline-block h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-15">
       <div className="mx-auto max-w-[1200px]">
@@ -74,7 +107,7 @@ export default function Gallery() {
                 />
                 
                 {/* Enhanced Description Panel */}
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-6 pt-12 mb-6">
+                <div className="absolute bottom-0 left-0 right-0  p-6 pt-12 mb-6">
                   <div className="max-w-2xl mx-auto text-center">
                     <h5 className="text-lg font-semibold text-white mb-2">{item.date}</h5>
                     <p className="text-sm text-gray-200 leading-relaxed">

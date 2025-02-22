@@ -16,8 +16,13 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import GalleryPage from './pages/gallery'
 import GoogleCallback from './pages/GoogleCallback'
-import EventRegister from './pages/eventregister'
+import EventRegister from './pages/event_register'
+import 'react-toastify/dist/ReactToastify.css';
+import EventPopup from './component/popup_event'
+import LoginPopup from './component/login_popup'
+
 function App() {
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   return (
     <Router>
@@ -29,7 +34,10 @@ function App() {
             element={
               <>
                 <NavBar />
+                <LoginPopup onShowChange={setShowLoginPopup} />
+                <EventPopup isBlurred={showLoginPopup} />
                 <Hero />
+                
                 <div id="about">
                   <About />
                 </div>
@@ -96,6 +104,13 @@ function App() {
             element={
               <ForgotPassword />
             }
+          />
+
+          <Route
+          path='/event-registration'
+          element={
+            <EventRegister/>
+          }
           />
 
           <Route path="/api/auth/google/callback" element={<GoogleCallback />} />
