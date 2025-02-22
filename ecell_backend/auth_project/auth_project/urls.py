@@ -9,4 +9,5 @@ urlpatterns = [
     path('api/auth/google/login/', GoogleLogin.as_view(), name='google_login'),
     path('api/auth/google/callback/', GoogleCallback.as_view(), name='google_callback'),
     path('api/ecell/', include('ecellpage.urls')),
+    path('api/events/', include('events.urls')),
 ]

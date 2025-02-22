@@ -1,23 +1,45 @@
 import { FaLightbulb, FaUsers, FaHandHoldingUsd, FaChartLine, FaNetworkWired, FaTrophy } from 'react-icons/fa';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchInitiatives } from '../features/initiatives/initiativesSlice';
 
 export default function Initiatives() {
-  const dispatch = useDispatch();
-  const { initiatives, status, error } = useSelector(state => state.initiatives);
-
-  useEffect(() => {
-    dispatch(fetchInitiatives());
-  }, [dispatch]);
-
-  if (status === 'loading') {
-    return <div>Loading initiatives...</div>;
-  }
-
-  if (status === 'failed') {
-    return <div>Error: {error}</div>;
-  }
+  // Static data for initiatives
+  const initiatives = [
+    {
+      id: 1,
+      subtitle: 'Innovation',
+      title: 'Startup Incubation',
+      description: 'Supporting early-stage startups with resources and mentorship to accelerate growth.'
+    },
+    {
+      id: 2,
+      subtitle: 'Community',
+      title: 'Entrepreneur Network',
+      description: 'Connecting entrepreneurs to share knowledge, resources, and opportunities.'
+    },
+    {
+      id: 3,
+      subtitle: 'Funding',
+      title: 'Seed Investment',
+      description: 'Providing initial funding and investment opportunities for promising startups.'
+    },
+    {
+      id: 4,
+      subtitle: 'Growth',
+      title: 'Business Scaling',
+      description: 'Helping established businesses scale their operations and reach new markets.'
+    },
+    {
+      id: 5,
+      subtitle: 'Collaboration',
+      title: 'Partnership Programs',
+      description: 'Facilitating strategic partnerships between startups and established companies.'
+    },
+    {
+      id: 6,
+      subtitle: 'Recognition',
+      title: 'Awards & Competitions',
+      description: 'Celebrating and rewarding innovative ideas and successful ventures.'
+    }
+  ];
 
   // Hardcoded icon mapping
   const iconComponents = [
@@ -30,7 +52,7 @@ export default function Initiatives() {
   ];
 
   return (
-    <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-30">
+    <div className="relative isolate px-4 sm:px-6 py-16 sm:py-24 lg:px-8 -mt-15">
       <div className="mx-auto max-w-[1200px]">
         <div className="group relative mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tighter text-gray-900 dark:text-white md:text-5xl">

@@ -16,28 +16,8 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import GalleryPage from './pages/gallery'
 import GoogleCallback from './pages/GoogleCallback'
-import LoadingAnimation from './components/LoadingAnimation'
-
+import EventRegister from './pages/eventregister'
 function App() {
-  const [isLoading, setIsLoading] = useState(() => {
-    // Check if user has visited before
-    const hasVisited = localStorage.getItem('hasVisited');
-    return !hasVisited;
-  });
-
-  useEffect(() => {
-    if (isLoading) {
-      const timer = setTimeout(() => {
-        localStorage.setItem('hasVisited', 'true');
-        setIsLoading(false);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [isLoading]);
-
-  if (isLoading) {
-    return <LoadingAnimation />;
-  }
 
   return (
     <Router>
@@ -70,6 +50,14 @@ function App() {
                 </div>
                 <Footer />
               </>
+            }
+          />
+
+          {/* Event Register Route */}
+          <Route
+            path="/eventregister"
+            element={
+              <EventRegister />
             }
           />
 

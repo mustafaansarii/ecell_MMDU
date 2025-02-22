@@ -12,18 +12,21 @@ export default function Gallery() {
   const dispatch = useDispatch();
   const { galleryItems, status, error } = useSelector(state => state.gallery);
 
+  // Fetch data only once on component mount
   useEffect(() => {
-    dispatch(fetchGallery());
-    console.log("Gallery Status:", status);
-    console.log("Gallery Error:", error);
-  }, [dispatch, status, error]);
+    if (galleryItems.length === 0) {
+      dispatch(fetchGallery());
+    }
+  }, [dispatch]); // Removed status/error from dependencies
 
   const handleNavigation = (direction) => {
-    if (direction === 'prev' && activeIndex > 0) {
-      setActiveIndex(activeIndex - 1);
-    } else if (direction === 'next' && activeIndex < galleryItems.length - 1) {
-      setActiveIndex(activeIndex + 1);
-    }
+    if (galleryItems.length === 0) return; // Prevent navigation if no items
+    
+    setActiveIndex(prev => {
+      if (direction === 'prev') return prev > 0 ? prev - 1 : galleryItems.length - 1;
+      if (direction === 'next') return prev < galleryItems.length - 1 ? prev + 1 : 0;
+      return prev;
+    });
   };
 
   const toggleFullscreen = () => {
@@ -63,21 +66,27 @@ export default function Gallery() {
         </div>
         <p className='text-center text-gray-500 text-xs sm:text-sm mb-6'>This is E-Cell MMDU gallery page where you'll find all the images of our events</p>
         
+        {/* Loading Spinner */}
+        {status === 'loading' && (
+          <div className="flex justify-center items-center min-h-[300px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+          </div>
+        )}
+
         {/* Gallery Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {galleryItems.map((item, index) => {
-            console.log(`Gallery Item ${index}:`, item);
-            return (
+        {status !== 'loading' && (
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {galleryItems.map((item) => (
               <div 
-                key={index} 
-                className="relative overflow-hidden shadow-md group aspect-square hover:shadow-xl transition-shadow duration-300 dark:shadow-gray-800/50 cursor-pointer"
+                key={item.id}
+                className="relative overflow-hidden shadow-md group aspect-square cursor-pointer"
                 onClick={() => setSelectedImage(item.image_url)}
               >
                 <div className="w-full h-full bg-gray-200 dark:bg-gray-700 animate-pulse">
                   <img
                     src={item.image_url}
-                    alt={`Gallery Image ${index + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    alt={`Gallery Image ${item.id}`}
+                    className="w-full h-full object-cover"
                     loading="lazy"
                     onLoad={(e) => e.target.classList.remove('hidden')}
                     onError={(e) => {
@@ -95,9 +104,9 @@ export default function Gallery() {
                   <p className="text-base sm:text-lg font-semibold mt-1">{item.description}</p>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Full-screen Image Modal */}
@@ -106,7 +115,7 @@ export default function Gallery() {
           className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="w-[1000px] max-w-full max-h-full">
+          <div className="w-[1000px] max-w-full max h-full">
             <img
               src={selectedImage}
               alt="Full screen"

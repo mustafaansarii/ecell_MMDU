@@ -1,27 +1,42 @@
 import { FaCalendarAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchEvents } from '../features/events/eventsSlice';
+import { useState } from 'react';
+
+const hardcodedEvents = [
+  {
+    id: 1,
+    title: "Startup Pitch Night",
+    date: "2023-11-15",
+    description: "Join us for an exciting evening of startup pitches from our latest cohort of entrepreneurs. Network with investors and industry leaders.",
+    event_type: "upcoming"
+  },
+  {
+    id: 2,
+    title: "AI in Business Workshop",
+    date: "2023-12-01",
+    description: "Learn how artificial intelligence is transforming modern businesses in this hands-on workshop.",
+    event_type: "upcoming"
+  },
+  {
+    id: 3,
+    title: "Summer Entrepreneurship Bootcamp",
+    date: "2023-08-20",
+    description: "Our annual intensive program that helped 50+ startups get off the ground this summer.",
+    event_type: "past"
+  },
+  {
+    id: 4,
+    title: "Women in Tech Conference",
+    date: "2023-05-10",
+    description: "A celebration of women's achievements in technology and entrepreneurship.",
+    event_type: "past"
+  }
+];
 
 export default function Events() {
   const [eventType, setEventType] = useState('upcoming');
   const [activeEvent, setActiveEvent] = useState(0);
-  const dispatch = useDispatch();
-  const { events, status, error } = useSelector(state => state.events);
 
-  useEffect(() => {
-    dispatch(fetchEvents());
-  }, [dispatch]);
-
-  if (status === 'loading') {
-    return <div>Loading events...</div>;
-  }
-
-  if (status === 'failed') {
-    return <div>Error: {error}</div>;
-  }
-
-  const currentEvents = events?.filter(event => event.event_type === eventType) || [];
+  const currentEvents = hardcodedEvents.filter(event => event.event_type === eventType);
   const currentEvent = currentEvents[activeEvent];
 
   const handleEventNavigation = (direction) => {
@@ -98,7 +113,7 @@ export default function Events() {
               <ul className="space-y-2">
                 {currentEvents.map((event, index) => (
                   <li
-                    key={index}
+                    key={event.id}
                     className={`relative cursor-pointer p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all ${
                       activeEvent === index
                         ? 'dark:bg-gray-800 shadow-sm sm:shadow-lg border-l-2 sm:border-l-4 border-purple-600'

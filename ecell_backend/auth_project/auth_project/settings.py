@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'social_django',
     'ecellpage',
+    'events'
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -139,8 +140,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -211,5 +212,5 @@ FRONTEND_URL = os.getenv('LOCAL_FRONTEND_URL') if IS_LOCAL else os.getenv('LIVE_
 GOOGLE_LOGIN_REDIRECT_URI = os.getenv('LOCAL_GOOGLE_LOGIN_REDIRECT_URI') if IS_LOCAL else os.getenv('LIVE_GOOGLE_LOGIN_REDIRECT_URI')
 FRONTEND_CALLBACK_URL = os.getenv('LOCAL_FRONTEND_CALLBACK_URL') if IS_LOCAL else os.getenv('LIVE_FRONTEND_CALLBACK_URL')
 
-# Add at the bottom
+# Enable compression and caching support
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

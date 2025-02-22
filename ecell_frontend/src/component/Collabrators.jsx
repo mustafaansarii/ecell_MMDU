@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchCollaborators } from '../features/collaborators/collaboratorsSlice';
+
+const staticCollaborators = [
+  { id: 1, name: 'Company A', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+  { id: 2, name: 'Company B', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+  { id: 3, name: 'Company C', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+  { id: 4, name: 'Company D', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+];
 
 export default function Collaborators() {
   const [width, setWidth] = useState(window.innerWidth);
-  const dispatch = useDispatch();
-  const { collaborators, status, error } = useSelector(state => state.collaborators);
-
-  useEffect(() => {
-    dispatch(fetchCollaborators());
-  }, [dispatch]);
 
   // Duplicate the collaborators array to create seamless looping
-  const doubleCollaborators = [...collaborators, ...collaborators];
+  const doubleCollaborators = [...staticCollaborators, ...staticCollaborators];
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);

@@ -1,35 +1,23 @@
-import { useState, useEffect } from 'react'
-import { FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaFacebook} from 'react-icons/fa';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchSocialMedia } from '../features/socialMedia/socialMediaSlice';
-import config from '../config';
+import { FaTwitter, FaInstagram, FaLinkedin, FaYoutube, FaFacebook } from 'react-icons/fa';
 
 export default function Hero() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [heroContent, setHeroContent] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const dispatch = useDispatch();
-  const { socialLinks, status, error } = useSelector((state) => state.socialMedia);
+  const heroContent = {
+    tagline: "Empowering Entrepreneurs, Building Futures",
+    taglinedescription: "Join our vibrant community of innovators and change-makers. Let's shape the future of entrepreneurship together.",
+    buttonText: "Get Started",
+    buttonLink: "#",
+    initiativesText: "Explore Initiatives",
+    initiativesLink: "#"
+  };
 
-  useEffect(() => {
-    dispatch(fetchSocialMedia());
-    
-    const fetchHeroContent = async () => {
-      try {
-        const response = await fetch(`${config.Backend_Api}/api/ecell/hero-content/`);
-        const data = await response.json();
-        setHeroContent([data]);
-      } catch (error) {
-        console.error('Error fetching hero content:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const socialLinks = [
+    { platform: 'twitter', url: 'https://twitter.com', color: 'text-[#1DA1F2]' },
+    { platform: 'instagram', url: 'https://instagram.com', color: 'text-[#E1306C]' },
+    { platform: 'linkedin', url: 'https://linkedin.com', color: 'text-[#0A66C2]' },
+    { platform: 'youtube', url: 'https://youtube.com', color: 'text-[#FF0000]' },
+    { platform: 'facebook', url: 'https://facebook.com', color: 'text-[#1877F2]' }
+  ];
 
-    fetchHeroContent();
-  }, [dispatch]);
-
-  // Map platform names to icons
   const platformIcons = {
     twitter: FaTwitter,
     instagram: FaInstagram,
@@ -39,61 +27,67 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative isolate px-6 pt-14 lg:px-8 flex items-center justify-center min-h-[calc(100vh-80px)] sm:min-h-0">
-      <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56 w-full">
-        {isLoading ? (
-          <div className="text-center">Loading hero content...</div>
-        ) : (
-          <>
-            <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-              <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 dark:text-gray-300 ring-1 ring-gray-900/10 dark:ring-gray-100 hover:ring-gray-900/20">
-                Join our upcoming Startup Bootcamp{' '}
-                <a href="#" className="font-semibold text-purple-600 dark:text-purple-400">
-                  <span aria-hidden="true" className="absolute inset-0" />
-                  Register now <span aria-hidden="true">&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div className="text-center flex flex-col items-center">
-              <h1 className="text-4xl font-semibold tracking-tight text-balance text-gray-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl max-w-4xl mx-auto">
-                {heroContent[0]?.tagline}
-              </h1>
-              <div className="mt-6 flex justify-center space-x-4 sm:space-x-6">
-                {status === 'loading' && <p>Loading social links...</p>}
-                {status === 'succeeded' && socialLinks.map((link) => {
-                  const IconComponent = platformIcons[link.platform];
-                  return (
-                    <a
-                      key={link.platform}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-gray-400 transition-colors"
-                    >
-                      {IconComponent && <IconComponent className="h-5 w-5 sm:h-5 sm:w-5" />}
-                    </a>
-                  );
-                })}
-                {status === 'failed' && <p>Error loading social links: {error}</p>}
-              </div>
-              <p className="mt-6 text-lg font-medium text-pretty text-gray-600 dark:text-gray-300 sm:text-lg/8 sm:mt-8 max-w-2xl">
-                {heroContent[0]?.taglinedescription}
-              </p>
-              <div className="mt-8 flex flex-row items-center justify-center gap-4 sm:gap-x-6 sm:mt-10">
-                <a
-                  href={heroContent[0]?.buttonLink}
-                  className="rounded-md bg-gradient-to-r from-blue-600 to-purple-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:from-blue-500 hover:to-purple-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-auto text-center"
-                >
-                  {heroContent[0]?.buttonText}
-                </a>
-                <a href={heroContent[0]?.initiativesLink} className="text-sm/6 font-semibold text-gray-900 dark:text-white ml-4">
-                  {heroContent[0]?.initiativesText} <span aria-hidden="true">→</span>
-                </a>
-              </div>
-            </div>
-          </>
-        )}
+    <div className="relative isolate px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-[90vh] mt-25">
+      <div className="max-w-7xl w-full text-center flex flex-col items-center px-4 sm:px-6">
+        {/* Announcement Banner - Hidden on mobile */}
+        <div className="hidden sm:block mb-4 sm:mb-8 animate-fade-in">
+          <div className="inline-flex flex-col sm:flex-row items-center justify-center rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-200 ring-1 ring-gray-900/10 dark:ring-gray-100/20 ">
+            <span className="text-center sm:text-left">🚀 Join our upcoming Startup Bootcamp</span>
+            <a href="#" className="sm:ml-2 mt-1 sm:mt-0 font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-500 dark:hover:text-purple-300 flex items-center">
+              Register now <span className="ml-1 transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Main Hero Content */}
+        <div className="space-y-6 sm:space-y-8 max-w-4xl">
+          <h1 className="text-3xl sm:text-2xl md:text-6xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {heroContent.tagline}
+          </h1>
+
+          {/* Tagline Description */}
+          <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+            {heroContent.taglinedescription}
+          </p>
+
+           {/* Social Icons */}
+        <div className="mt-2 sm:mt-2 flex justify-center space-x-3">
+          {socialLinks.map((link) => {
+            const IconComponent = platformIcons[link.platform];
+            return (
+              <a
+                key={link.platform}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`hover:text-gray-600 dark:hover:text-gray-400 ${link.color} transition-all duration-300 hover:scale-110 p-2 rounded-lg`}
+              >
+                {IconComponent && <IconComponent className="h-5 w-5 sm:h-6 sm:w-6" />}
+              </a>
+            );
+          })}
+        </div>
+
+          {/* Buttons */}
+          <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+            <a
+              href={heroContent.buttonLink}
+              className="w-full sm:w-auto rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-3 text-sm sm:text-base font-semibold text-white shadow-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 ring-2 ring-blue-500/30 dark:ring-blue-600/30 flex items-center justify-center space-x-2"
+            >
+              <span>{heroContent.buttonText}</span>
+              <span className="transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+            <a 
+              href={heroContent.initiativesLink} 
+              className="group text-sm sm:text-base font-semibold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-300 flex items-center"
+            >
+              {heroContent.initiativesText} <span className="ml-1 transform transition-transform group-hover:translate-x-1">→</span>
+            </a>
+          </div>
+        </div>
+
+       
       </div>
     </div>
-  )
+  );
 }
