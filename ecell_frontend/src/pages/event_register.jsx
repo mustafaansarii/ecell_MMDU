@@ -23,7 +23,7 @@ const EventRegister = () => {
     useEffect(() => {
         const fetchActiveEvent = async () => {
             try {
-                const response = await axios.get(`${config.apiUrl}/events/all/`);
+                const response = await axios.get(`${config.Backend_Api}/api/events/all/`);
                 const activeEvent = response.data.find(event => event.status === 'active');
                 if (!activeEvent) {
                     toast.error('No active events found. Stay tuned for upcoming events!');
@@ -56,7 +56,7 @@ const EventRegister = () => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await axios.post(`${config.apiUrl}/events/register/`, formData);
+            const response = await axios.post(`${config.Backend_Api}/api/events/register/`, formData);
             if (response.data.created) {
                 toast.success(`Registration successful! Your registration ID is ${response.data.registration_id}`);
                 // Store registration flag in localStorage
