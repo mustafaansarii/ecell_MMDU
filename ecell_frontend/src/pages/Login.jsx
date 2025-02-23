@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser, googleLoginUser } from '../auth/authSlice';
+import { loginUser, googleLoginUser } from '../component/auth/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaLock, FaEnvelope } from 'react-icons/fa';
 import { motion } from 'framer-motion';

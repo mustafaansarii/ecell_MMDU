@@ -5,7 +5,7 @@ import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../auth/authSlice'
+import { logout } from '../component/auth/authSlice'
 import AlertBanner from './aleart_banner' 
 const navigation = [
   { name: 'About', href: '#about' },
@@ -50,6 +50,7 @@ export default function NavBar() {
 
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.clear();
     window.location.href = '/login';
   };
 

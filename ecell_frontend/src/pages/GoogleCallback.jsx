@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../auth/authSlice';
+import { setUser } from '../component/auth/authSlice';
 import toast from 'react-hot-toast';
 
 const GoogleCallback = () => {

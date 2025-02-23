@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiArrowRight, HiX } from 'react-icons/hi';
@@ -7,7 +7,7 @@ export default function AlertBanner({ onClose }) {
   const [isVisible, setIsVisible] = useState(true);
   const alerts = [
     {
-      text: "Register now for Hackathon",
+      text: "Register now for event",
       link: "/eventregister"
     },
     {
@@ -15,10 +15,18 @@ export default function AlertBanner({ onClose }) {
       link: "/joinecell"
     },
     {
-      text: "Upcoming event - Limited time offer!",
+      text: "Upcoming event!",
       link: "/#events"
     }
   ];
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleClose();
+    }, 30000); // 30 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClose = () => {
     setIsVisible(false);

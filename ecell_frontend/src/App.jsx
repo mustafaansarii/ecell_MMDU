@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
 import NavBar from './component/NavBar'
 import Hero from './component/Hero'
@@ -20,6 +20,8 @@ import EventRegister from './pages/event_register'
 import 'react-toastify/dist/ReactToastify.css';
 import EventPopup from './component/popup_event'
 import LoginPopup from './component/login_popup'
+import JoinEcell from './pages/joinecell'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
@@ -61,60 +63,34 @@ function App() {
             }
           />
 
-          {/* Event Register Route */}
+          {/* Protected Routes */}
           <Route
             path="/eventregister"
             element={
-              <EventRegister />
-            }
-          />
-
-          {/* Team Route */}
-          <Route
-            path="/team"
-            element={
-              <TeamPage />
-            }
-          />
-          {/* Gallery Route */}
-          <Route
-            path="/gallery"
-            element={
-              <GalleryPage />
-            }
-          />
-
-          {/* Login Route */}
-          <Route
-            path="/login"
-            element={
-              <Login />
-            }
-          />
-          {/* Register Route */}
-          <Route
-            path="/register"
-            element={
-              <Register />
-            }
-          />
-          {/* Forgot Password Route */}
-          <Route
-            path="/forgot-password"
-            element={
-              <ForgotPassword />
+              <ProtectedRoute>
+                <EventRegister />
+              </ProtectedRoute>
             }
           />
 
           <Route
-          path='/event-registration'
-          element={
-            <EventRegister/>
-          }
+            path="/joinecell"
+            element={
+              <ProtectedRoute>
+                <JoinEcell />
+              </ProtectedRoute>
+            }
           />
 
+          {/* Public Routes */}
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/event-registration" element={<EventRegister />} />
           <Route path="/api/auth/google/callback" element={<GoogleCallback />} />
-
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>

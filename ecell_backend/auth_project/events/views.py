@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Event, Registration
+from .models import Event, Registration, JoinEcellRegistration
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import EventSerializer, RegistrationSerializer
+from .serializers import EventSerializer, RegistrationSerializer, JoinEcellRegistrationSerializer
 
 # Create your views here.
 
@@ -143,3 +143,17 @@ def register_for_event(request):
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+class JoinEcellRegistrationView(APIView):
+    def post(self, request):
+        serializer = JoinEcellRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'message': 'Registration successful!',
+                'data': serializer.data
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Registration failed',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)

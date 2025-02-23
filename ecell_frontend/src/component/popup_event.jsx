@@ -8,7 +8,13 @@ export default function EventPopup({ isBlurred }) {
     const [activeEvent, setActiveEvent] = useState(null);
     const [isVisible, setIsVisible] = useState(true);
 
+    // Check localStorage for registration status
+    const isRegistered = localStorage.getItem('registrationDone') === 'true';
+
     useEffect(() => {
+        // Don't fetch events if already registered
+        if (isRegistered) return;
+
         const fetchActiveEvents = async () => {
             try {
                 const response = await fetch(`${config.Backend_Api}/api/events/all/`);
@@ -23,13 +29,14 @@ export default function EventPopup({ isBlurred }) {
         };
 
         fetchActiveEvents();
-    }, []);
+    }, [isRegistered]);
 
     const handleClose = () => {
         setIsVisible(false);
     };
 
-    if (!isVisible || !activeEvent) return null;
+    // Don't show popup if registered or not visible or no active event
+    if (isRegistered || !isVisible || !activeEvent) return null;
 
     // Format the end date to be human readable
     const formattedEndDate = new Date(activeEvent.end_date).toLocaleDateString('en-US', {

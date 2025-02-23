@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser, sendUserOTP, googleSignupUser } from '../auth/authSlice';
+import { registerUser, sendUserOTP } from '../component/auth/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaEnvelope, FaLock, FaUser, FaShieldAlt } from 'react-icons/fa';
 import toast from 'react-hot-toast';

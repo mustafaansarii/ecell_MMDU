@@ -1,7 +1,11 @@
 from django.contrib import admin
-from .models import Event, Registration
+from .models import Event, Registration, JoinEcellRegistration
 from django import forms
 from django.utils.html import format_html
+from django.http import HttpResponse
+import csv
+import openpyxl
+from datetime import datetime
 
 class EventForm(forms.ModelForm):
     class Meta:
@@ -94,6 +98,7 @@ class RegistrationAdmin(admin.ModelAdmin):
             'fields': ('created_at',)
         }),
     )
+    actions = ['export_as_csv']
 
     def user_email(self, obj):
         return obj.user.email
@@ -104,3 +109,80 @@ class RegistrationAdmin(admin.ModelAdmin):
             return format_html('<pre>{}</pre>', obj.data)
         return "-"
     data_preview.short_description = 'Data'
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        # Get date range from request
+        date_from = request.GET.get('created_at__gte')
+        date_to = request.GET.get('created_at__lte')
+        
+        # Filter queryset if date range is provided
+        if date_from or date_to:
+            try:
+                if date_from:
+                    queryset = queryset.filter(created_at__gte=date_from)
+                if date_to:
+                    queryset = queryset.filter(created_at__lte=date_to)
+            except Exception as e:
+                self.message_user(request, f"Invalid date format: {str(e)}", level='error')
+                return
+
+        if not queryset.exists():
+            self.message_user(request, "No records found for the selected date range", level='warning')
+            return
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename={meta.verbose_name_plural}-{datetime.now().strftime("%Y-%m-%d")}.csv'
+        
+        writer = csv.writer(response)
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+    export_as_csv.short_description = "Export Selected as CSV"
+
+@admin.register(JoinEcellRegistration)
+class JoinEcellRegistrationAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'email', 'course_branch', 'year_of_study', 'created_at')
+    search_fields = ('full_name', 'email', 'roll_number')
+    list_filter = ('year_of_study', 'role_preference', 'time_commitment', ('created_at', admin.DateFieldListFilter))
+    readonly_fields = ('created_at', 'updated_at')
+    actions = ['export_as_csv']
+    date_hierarchy = 'created_at'
+
+    def export_as_csv(self, request, queryset):
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        # Get date range from request
+        date_from = request.GET.get('created_at__gte')
+        date_to = request.GET.get('created_at__lte')
+        
+        # Filter queryset if date range is provided
+        if date_from or date_to:
+            try:
+                if date_from:
+                    queryset = queryset.filter(created_at__gte=date_from)
+                if date_to:
+                    queryset = queryset.filter(created_at__lte=date_to)
+            except Exception as e:
+                self.message_user(request, f"Invalid date format: {str(e)}", level='error')
+                return
+
+        if not queryset.exists():
+            self.message_user(request, "No records found for the selected date range", level='warning')
+            return
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename={meta.verbose_name_plural}-{datetime.now().strftime("%Y-%m-%d")}.csv'
+        
+        writer = csv.writer(response)
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+    export_as_csv.short_description = "Export Selected as CSV"

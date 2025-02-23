@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaSpinner } from 'react-icons/fa';
-import config from '../config';
+
 const EventRegister = () => {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -23,10 +23,10 @@ const EventRegister = () => {
     useEffect(() => {
         const fetchActiveEvent = async () => {
             try {
-                const response = await axios.get(`${config.Backend_Api}/api/events/all/`);
+                const response = await axios.get('http://localhost:8000/api/events/all/');
                 const activeEvent = response.data.find(event => event.status === 'active');
                 if (!activeEvent) {
-                    toast.error('No active events currently in E-Cell');
+                    toast.error('No active events found. Stay tuned for upcoming events!');
                     navigate('/');
                     return;
                 }
@@ -39,7 +39,7 @@ const EventRegister = () => {
         };
 
         fetchActiveEvent();
-    }, [navigate]);
+    }, []);
 
     const handleInputChange = (e, index) => {
         const { name, value } = e.target;
@@ -56,9 +56,11 @@ const EventRegister = () => {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await axios.post(`${config.Backend_Api}/api/events/register/`, formData);
+            const response = await axios.post(`http://localhost:8000/api/events/register/`, formData);
             if (response.data.created) {
                 toast.success(`Registration successful! Your registration ID is ${response.data.registration_id}`);
+                // Store registration flag in localStorage
+                localStorage.setItem('registrationDone', 'true');
                 // Clear form after successful registration
                 setFormData({
                     email: '',
@@ -68,6 +70,8 @@ const EventRegister = () => {
                     contact_no: ['', '', '', ''],
                     additional_doc_drivelink: ''
                 });
+                // Redirect to home page
+                navigate('/');
             } else {
                 toast.error('This email is already registered for the event');
             }
@@ -77,6 +81,15 @@ const EventRegister = () => {
             setSubmitting(false);
         }
     };
+
+    // Add check for existing registration
+    useEffect(() => {
+        const registrationDone = localStorage.getItem('registrationDone');
+        if (registrationDone === 'true') {
+            toast.error('You have already registered for this event');
+            navigate('/');
+        }
+    }, []);
 
     if (loading) {
         return (
@@ -92,12 +105,7 @@ const EventRegister = () => {
         );
     }
 
-    if (!event) {
-        useEffect(() => {
-            navigate('/');
-        }, [navigate]);
-        return null;
-    }
+    if (!event) return null;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
@@ -125,7 +133,7 @@ const EventRegister = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="form-group">
-                                <label className="block text-sm font-medium text-gray-7 00 dark:text-gray-300 mb-2">Email:</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email:</label>
                                 <input
                                     type="email"
                                     name="email"
@@ -161,7 +169,7 @@ const EventRegister = () => {
                                                 name="member_names"
                                                 value={formData.member_names[index]}
                                                 onChange={(e) => handleInputChange(e, index)}
-                                                className="w-full px极-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                 required
                                             />
                                         </div>
@@ -172,7 +180,7 @@ const EventRegister = () => {
                                                 name="course_year"
                                                 value={formData.course_year[index]}
                                                 onChange={(e) => handleInputChange(e, index)}
-                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus极-border-blue-500 dark:bg-gray-700 dark:text-white"
+                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                                                 required
                                             />
                                         </div>

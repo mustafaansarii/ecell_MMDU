@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 const staticCollaborators = [
   { id: 1, name: 'Company A', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
-  { id: 2, name: 'Company B', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+  { id: 2, name: 'Company B', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/iit_bombay.png' },
   { id: 3, name: 'Company C', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
-  { id: 4, name: 'Company D', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/nec.png' },
+  { id: 4, name: 'Company D', logo_url: 'https://mmdu-ecell.vercel.app/assets/images/iit_bombay.png' },
 ];
 
 export default function Collaborators() {

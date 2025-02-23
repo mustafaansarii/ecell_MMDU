@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../auth/authSlice';
+import authReducer from '../component/auth/authSlice';
 import galleryReducer from '../features/gallery/gallerySlice';
 import eventsReducer from '../features/events/eventsSlice';
 
@@ -10,7 +10,6 @@ const preloadedState = {
     loading: false,
     error: null,
     isVerified: false,
-    logoutTimer: null
   },
   gallery: {
     galleryItems: [],

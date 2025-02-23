@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaEnvelope, FaLock, FaShieldAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { sendOTPForgetPass, resetPassword } from '../auth/authService';
+import { sendOTPForgetPass, resetPassword } from '../component/auth/authService';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
