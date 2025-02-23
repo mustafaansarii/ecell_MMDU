@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    {% if show_login %}
+        <div class="modal show d-block" id="loginModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Login</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" id="password" class="form-control" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                            <p id="errorMessage" class="text-danger mt-2 text-center" style="display:none;">Invalid credentials</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if not show_login %}
+        {% include 'navbar.html' %}
+        <div class="container" style="max-width: 1200px;">
+            <p class="text-black text-center mt-3">Welcome, {{ request.session.username }}</p>
+            
+            <div class="container-fluid flex-grow-1 mt-3">
+                <div class="row mb-3">
+                    <div class="col-12 col-md-8">
+                        <h2 class="h4 mb-3 mb-md-0 text-center text-md-start">Registered Students for E-Cell Team Join</h2>
+                    </div>
+                    <div class="col-12 col-md-4 d-flex justify-content-center justify-content-md-end">
+                        <a href="{% url 'export_joinecell_csv' %}" download class="btn btn-primary">
+                            <span>Download CSV</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="d-none d-md-table-cell">Full Name</th>
+                                        <th>Email</th>
+                                        <th class="d-none d-md-table-cell">Roll Number</th>
+                                        <th class="d-none d-md-table-cell">Course & Branch</th>
+                                        <th class="d-none d-md-table-cell">Year of Study</th>
+                                        <th class="d-none d-md-table-cell">Contact Number</th>
+                                        <th>Registered On</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for reg in registrations %}
+                                    <tr>
+                                        <td class="d-none d-md-table-cell">{{ reg.full_name }}</td>
+                                        <td>{{ reg.email }}</td>
+                                        <td class="d-none d-md-table-cell">{{ reg.roll_number }}</td>
+                                        <td class="d-none d-md-table-cell">{{ reg.course_branch }}</td>
+                                        <td class="d-none d-md-table-cell">{{ reg.year_of_study }}</td>
+                                        <td class="d-none d-md-table-cell">{{ reg.contact_number }}</td>
+                                        <td>{{ reg.created_at|date:"Y-m-d H:i" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination p-3 d-flex justify-content-center">
+                    <span class="step-links d-flex flex-wrap justify-content-center gap-2">
+                        {% if registrations.has_previous %}
+                            <a href="?page=1" class="btn btn-sm btn-outline-primary">&laquo; first</a>
+                            <a href="?page={{ registrations.previous_page_number }}" class="btn btn-sm btn-outline-primary">previous</a>
+                        {% endif %}
+
+                        <span class="current mx-2 my-auto text-center">
+                            Page {{ registrations.number }} of {{ registrations.paginator.num_pages }}
+                        </span>
+
+                        {% if registrations.has_next %}
+                            <a href="?page={{ registrations.next_page_number }}" class="btn btn-sm btn-outline-primary">next</a>
+                            <a href="?page={{ registrations.paginator.num_pages }}" class="btn btn-sm btn-outline-primary">last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let loginForm = document.getElementById("loginForm");
+            if (loginForm) {
+                loginForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    let username = document.getElementById("username").value;
+                    let password = document.getElementById("password").value;
+
+                    fetch("/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+                        body: `username=${username}&password=${password}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            document.getElementById("errorMessage").style.display = "block";
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

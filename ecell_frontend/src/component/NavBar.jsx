@@ -6,7 +6,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../component/auth/authSlice'
-import AlertBanner from './aleart_banner' 
+import AlertBanner from './aleart_banner'
+
 const navigation = [
   { name: 'About', href: '#about' },
   { name: 'Initiatives', href: '#initiatives' },
@@ -23,11 +24,12 @@ export default function NavBar() {
   const location = useLocation();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [activeEvent, setActiveEvent] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
-    }
+    }eventregister
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -48,6 +50,23 @@ export default function NavBar() {
     }
   }, [dispatch, user]);
 
+  useEffect(() => {
+    const fetchActiveEvents = async () => {
+      try {
+        const response = await fetch(`${config.Backend_Api}/api/events/all/`);
+        const data = await response.json();
+        const active = data.find(event => event.status === 'active');
+        if (active) {
+          setActiveEvent(active);
+        }
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchActiveEvents();
+  }, []);
+
   const handleLogout = () => {
     dispatch(logout());
     localStorage.clear();
@@ -57,6 +76,11 @@ export default function NavBar() {
   const handleAlertClose = () => {
     setIsAlertVisible(false);
   };
+
+  const userNavigation = [
+    { name: 'Join E-Cell', href: '/joinecell' },
+    ...(activeEvent ? [{ name: 'Event Register', href: '/eventregister' }] : [])
+  ];
 
   return (
     <>
@@ -93,6 +117,15 @@ export default function NavBar() {
             </div>
             <div className="hidden lg:flex lg:gap-x-8">
               {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="relative text-sm/6 font-semibold text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-blue-600 dark:after:bg-blue-400 hover:after:w-full after:transition-all after:duration-300"
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {user && userNavigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
@@ -157,6 +190,16 @@ export default function NavBar() {
                 <div className="-my-6 divide-y divide-gray-5 00/10">
                   <div className="space-y-2 py-6">
                     {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                    {user && userNavigation.map((item) => (
                       <Link
                         key={item.name}
                         to={item.href}

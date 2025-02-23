@@ -7,6 +7,7 @@ from rest_framework import generics
 from django.core.mail import send_mail
 from rest_framework import status
 from django.core.cache import cache
+from django.shortcuts import render
 
 # Create your views here.
 
@@ -72,3 +73,4 @@ class TeamList(APIView):
         cache.set(cache_key, serializer.data, timeout=3600)
         
         return Response(serializer.data)
+

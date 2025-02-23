@@ -7,4 +7,8 @@ urlpatterns = [
     path('register/', views.register_for_event, name='register_for_event'),
     path('all/', views.EventListView.as_view(), name='event_list'),
     path('join-ecell/', views.JoinEcellRegistrationView.as_view(), name='join_ecell_registration'),
+    path('logout/', views.logout_view, name='logout'),
+    path('export/joinecell/', views.export_joinecell_csv, name='export_joinecell_csv'),
+    path('', views.home, name='home'),
+    path('event-details/', views.event_registration_list, name='event_registration_list'),
 ] 

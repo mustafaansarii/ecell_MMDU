@@ -17,6 +17,12 @@ from datetime import timedelta
 
 # Load environment variables from .env file
 load_dotenv()
+import os
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
+STAFF_CREDENTIALS = json.loads(os.getenv("STAFF_CREDENTIALS", "{}"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,7 +78,7 @@ ROOT_URLCONF = 'auth_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'static/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -221,3 +227,5 @@ CACHES = {
         'LOCATION': 'unique-snowflake',
     }
 }
+
+
