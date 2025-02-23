@@ -109,7 +109,7 @@ const authSlice = createSlice({
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         state.user = null;
-      }, 24 * 60 * 60 * 1000);
+      }, 23 * 60 * 60 * 1000);
     }
   },
   extraReducers: (builder) => {
