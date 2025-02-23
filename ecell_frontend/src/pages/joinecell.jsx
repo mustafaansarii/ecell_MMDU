@@ -166,6 +166,18 @@ export default function JoinEcell() {
       return;
     }
 
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedData.email)) {
+      setErrors(prev => ({
+        ...prev,
+        email: 'Please enter a valid email address'
+      }));
+      toast.error('Please enter a valid email address');
+      setIsSubmitting(false);
+      return;
+    }
+
     // Check for empty required fields
     const missingFields = requiredFields.filter(field => {
       const value = trimmedData[field];

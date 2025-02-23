@@ -13,6 +13,7 @@ const Register = () => {
   const [sendingOTP, setSendingOTP] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -60,14 +61,17 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     if (!validateEmail(formData.email)) {
       setEmailError('Please enter a valid email address');
+      setIsSubmitting(false);
       return;
     }
     
     if (!validatePassword(formData.password)) {
       setPasswordError('Password must be at least 8 characters long, contain at least one uppercase letter, one number, and one special character');
+      setIsSubmitting(false);
       return;
     }
     
@@ -77,6 +81,8 @@ const Register = () => {
       navigate('/login');
     } catch (error) {
       toast.error("Verify your email" || 'Registration failed');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -205,9 +211,17 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all"
+            disabled={isSubmitting}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all flex items-center justify-center"
           >
-            Register
+            {isSubmitting ? (
+              <div className="flex items-center">
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                <span>Registering...</span>
+              </div>
+            ) : (
+              'Register'
+            )}
           </button>
 
           <button
