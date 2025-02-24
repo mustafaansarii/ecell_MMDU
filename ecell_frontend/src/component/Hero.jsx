@@ -5,9 +5,9 @@ export default function Hero() {
     tagline: "Empowering Entrepreneurs, Building Futures",
     taglinedescription: "Join our vibrant community of innovators and change-makers. Let's shape the future of entrepreneurship together.",
     buttonText: "Get Started",
-    buttonLink: "#",
+    buttonLink: "#events",
     initiativesText: "Explore Initiatives",
-    initiativesLink: "#"
+    initiativesLink: "#initiatives"
   };
 
   const socialLinks = [
