@@ -66,13 +66,8 @@ const ForgotPassword = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/20"
-      >
-        <div className="flex items-center justify-start mb-4">
+      <div className="fixed top-4 left-4 z-50">
+        <div className="flex items-center justify-start">
           <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition-colors">
             <FaHome className="mr-2" />
             <span className="text-sm">Home</span>
@@ -80,7 +75,14 @@ const ForgotPassword = () => {
           <span className="mx-2 text-gray-400">/</span>
           <span className="text-sm text-purple-500">Forgot Password</span>
         </div>
+      </div>
 
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full space-y-8 p-8"
+      >
         <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Reset Password
         </h2>

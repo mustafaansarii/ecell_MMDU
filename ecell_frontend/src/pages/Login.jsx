@@ -46,20 +46,24 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 relative">
+      {/* Fixed breadcrumb navigation */}
+      <div className="fixed top-4 left-4 z-50">
+        <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">
+          <FaHome className="mr-2" />
+          <span className="text-sm">Home</span>
+          <span className="mx-2 text-gray-400">/</span>
+          <span className="text-sm text-blue-500">Login</span>
+        </Link>
+      </div>
+
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-8 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/20 dark:border-gray-700/20"
+        className="max-w-md w-full space-y-8 p-8"
       >
         <div className="text-center">
-          <Link to="/" className="flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors">
-            <FaHome className="mr-2" />
-            <span className="text-sm">Home</span>
-            <span className="mx-2 text-gray-400">/</span>
-            <span className="text-sm text-blue-500">Login</span>
-          </Link>
           <h2 className="mt-6 text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Welcome Back
           </h2>
@@ -80,6 +84,17 @@ const Login = () => {
           />
           Continue with Google
         </button>
+
+        <div className="relative mt-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300 dark:border-gray-700"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+              Or continue with
+            </span>
+          </div>
+        </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-5">
@@ -103,7 +118,7 @@ const Login = () => {
               </div>
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-7 00 dark:text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
