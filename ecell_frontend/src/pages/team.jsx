@@ -74,95 +74,102 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col items-center">
-          <div className="w-full flex items-center justify-between mb-4">
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition-colors">
-                <FaHome className="mr-2" />
-                <span className="text-sm">Home</span>
-              </Link>
-              <span className="mx-2 text-gray-400">/</span>
-              <span className="text-sm text-purple-500">Team</span>
-            </div>
+    <div className="min-h-screen  ">
+      <div className="flex items-center space-x-2 mb-8 px-4 sm:px-6 mt-4">
+        <Link to="/" className="flex items-center text-gray-600 dark:text-gray-300 hover:text-purple-500 transition-colors group">
+          <FaHome className="mr-1 sm:mr-2 transition-transform group-hover:scale-110" />
+          <span className="text-xs sm:text-sm font-medium">Home</span>
+        </Link>
+        <span className="text-gray-400 text-xs sm:text-sm">/</span>
+        <span className="text-xs sm:text-sm font-semibold text-purple-500">Team</span>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col items-center mb-8 sm:mb-16">
+          <div className="text-center space-y-2 sm:space-y-4">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent"
+            >
+              Meet Our Team
+            </motion.h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              A dedicated team of visionaries driving innovation and excellence in entrepreneurship
+            </p>
           </div>
-          <div className="text-center ">
-            <h1 className='font-bold text-5xl text-purple-400'>Meet Our Team</h1>
-            <p className='text-gray-600 dark:text-gray-300 text-sm'>this is our team who are working for the betterment of the college and the students</p>
-          </div>
-        </div>
-        
-        {/* Faculty Advisors Section */}
-        <div className="group relative mb-8 md:mb-16 text-center mt-5">
-          <div className="absolute -inset-1 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-          <h2 className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-purple-400">
-            Faculty Advisors
-          </h2>
-          <p className="mt-2 md:mt-4 text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Guiding mentors shaping entrepreneurial journeys
-          </p>
-          <div className="h-1 w-20 md:w-32 mt-4 md:mt-6 mx-auto rounded-full transition-all duration-300 group-hover:w-24 md:group-hover:w-40" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-12 md:mb-20 -mt-6 md:-mt-10">
-          <AnimatePresence>
-            {teamData.faculty.map((faculty, index) => (
-              <motion.div
-                key={faculty.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative rounded-xl md:rounded-2xl shadow-md md:shadow-lg p-4 md:p-8 hover:shadow-xl transition-all duration-300 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border-2 border-transparent hover:border-purple-500 hover:border-t-blue-500 hover:border-r-pink-500 hover:border-b-green-500 hover:border-l-yellow-500"
-              >
-                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-full blur opacity-10 group-hover:opacity-20 transition-opacity animate-pulse" />
-                    <img 
-                      src={faculty.img_link} 
-                      alt={faculty.name}
-                      className="w-20 h-20 md:w-32 md:h-32 rounded-full object-cover border-2 md:border-4 border-white/50 dark:border-gray-800/50 relative transform transition duration-300 hover:rotate-6"
-                    />
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">{faculty.name}</h3>
-                    <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mt-1 flex items-center justify-center md:justify-start gap-2">
-                      <FaUserTie className="text-purple-600 animate-bounce" />
-                      {faculty.role}
-                    </p>
-                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2 md:mt-3 leading-relaxed">
-                      {faculty.description}
-                    </p>
-                    <div className="flex items-center justify-center md:justify-start gap-3 md:gap-4 mt-3 md:mt-4">
-                      <a href={faculty.linkedin_link} target="_blank" rel="noopener noreferrer" className="p-1 md:p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-purple-600 transition-all">
-                        <FaLinkedin className="w-5 h-5 md:w-6 md:h-6 text-purple-600 dark:text-white" />
-                      </a>
-                      <div className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1 md:py-2 rounded-full">
-                        <FaPhone className="h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-400" />
-                        <span className="font-medium text-sm md:text-base text-gray-700 dark:text-gray-300">{faculty.contact_no}</span>
+        <section className="group relative mb-12 sm:mb-20 text-center">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-3xl opacity-10 animate-pulse" />
+          <h2 className="relative text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            Faculty Advisors
+          </h2>
+          <p className="mt-2 sm:mt-4 text-sm sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Guiding mentors shaping entrepreneurial journeys
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8 mt-6 sm:mt-12">
+            <AnimatePresence>
+              {teamData.faculty.map((faculty, index) => (
+                <motion.div
+                  key={faculty.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 50 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="relative rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-8 hover:shadow-2xl transition-all duration-300 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-purple-100/30 hover:border-purple-200/50"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="flex flex-col md:flex-row items-center gap-6">
+                    <div className="relative w-32 h-32">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full blur opacity-30 animate-pulse" />
+                      <img 
+                        src={faculty.img_link} 
+                        alt={faculty.name}
+                        className="w-full h-full rounded-full object-cover border-4 border-white/80 dark:border-gray-800/80 relative z-10 transform transition duration-300 hover:scale-105"
+                      />
+                    </div>
+                    <div className="flex-1 text-center md:text-left space-y-4">
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{faculty.name}</h3>
+                      <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mt-1 flex items-center justify-center md:justify-start gap-2">
+                        <FaUserTie className="text-purple-600 animate-bounce" />
+                        {faculty.role}
+                      </p>
+                      <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                        {faculty.course_year}
+                      </p>
+                      <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2 md:mt-3 leading-relaxed">
+                        {faculty.description}
+                      </p>
+                      <div className="flex items-center justify-center md:justify-start gap-3 md:gap-4 mt-3 md:mt-4">
+                        <a href={faculty.linkedin_link} target="_blank" rel="noopener noreferrer" className="p-1 md:p-2 rounded-full bg-white/20 backdrop-blur-sm transition-all">
+                          <FaLinkedin className="w-5 h-5 md:w-6 md:h-6 text-purple-600 dark:text-white" />
+                        </a>
+                        <div className="flex items-center gap-1 md:gap-2 px-2 md:px-4 py-1 md:py-2 rounded-full">
+                          <FaPhone className="h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-400" />
+                          <span className="font-medium text-sm md:text-base text-gray-700 dark:text-gray-300">{faculty.contact_no}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </section>
 
-        {/* Team Sections */}
         {[teamData.domain, teamData.management].map((team, teamIndex) => (
-          <div key={teamIndex} className="group relative mb-8 md:mb-16 text-center">
-            <div className="absolute -inset-1 rounded-lg blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
-            <h2 className="relative text-2xl sm:text-3xl md:text-4xl font-bold text-purple-400">
-              {team === teamData.domain ? 'Domain Leaders' : 'Management Team'}
+          <section key={teamIndex} className="group relative mb-12 sm:mb-20 text-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-3xl opacity-10 animate-pulse" />
+            <h2 className="relative text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              {team === teamData.domain ? 'Domain Experts' : 'Executive Team'}
             </h2>
-            <p className="mt-2 md:mt-4 text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {team === teamData.domain ? 'Driving excellence in specialized domains' : 'Orchestrating seamless operations'}
+            <p className="mt-2 sm:mt-4 text-sm sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              {team === teamData.domain ? 'Specialized leadership in key domains' : 'Strategic operational leadership'}
             </p>
-            <div className="h-1 w-20 md:w-32 mt-4 md:mt-6 mx-auto rounded-full transition-all duration-300 group-hover:w-24 md:group-hover:w-40" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-6 md:mt-8">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mt-6 sm:mt-12">
               <AnimatePresence>
                 {team.map((member, index) => (
                   <motion.div
@@ -171,29 +178,30 @@ export default function TeamPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 50 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="relative rounded-xl md:rounded-2xl shadow-md md:shadow-lg p-3 md:p-4 hover:shadow-xl transition-all duration-300 group bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm border border-purple-200 hover:border-purple-400"
+                    className="w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(33%-1rem)] lg:w-[calc(25%-1.5rem)] relative rounded-2xl p-4 sm:p-6 hover:shadow-2xl transition-all duration-300 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-purple-100/30 hover:border-purple-200/50"
                   >
-                    <div className="flex flex-col items-center space-y-3 md:space-y-4">
-                      <div className="relative">
-                        <div className="absolute inset-0 rounded-full blur opacity-10 group-hover:opacity-20 transition-opacity animate-pulse" />
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="relative w-24 h-24">
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full blur opacity-30 animate-pulse" />
                         <img 
                           src={member.img_link} 
                           alt={member.name}
-                          className="w-16 h-16 md:w-24 md:h-24 rounded-full object-cover border-2 border-white/50 dark:border-gray-800/50 transform transition duration-300 hover:rotate-6"
+                          className="w-full h-full rounded-full object-cover border-4 border-white/80 dark:border-gray-800/80 relative z-10 transform transition duration-300 hover:scale-105"
                         />
                       </div>
-                      <div className="text-center">
-                        <h3 className="text-sm md:text-md font-bold text-gray-900 dark:text-white">{member.name}</h3>
-                        <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mt-1 flex items-center justify-center gap-1 md:gap-2">
-                          <FaUserTie className="text-purple-600 text-xs" />
-                          {member.role}
-                        </p>
+                      <div className="text-center space-y-2">
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{member.name}</h3>
+                        <p className="text-sm text-purple-500 dark:text-purple-400 font-medium">{member.role}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">{member.course_year}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300">{member.description}</p>
                       </div>
                       <div className="flex flex-col items-center space-y-1 md:space-y-2 w-full">
                         <div className="flex items-center justify-center space-x-2 md:space-x-3">
-                          <a href={member.linkedin_link} className="p-1 md:p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-purple-600 transition-all">
-                            <FaLinkedin className="w-3 h-3 md:w-4 md:h-4 text-purple-600 dark:text-white" />
-                          </a>
+                          {member.linkedin_link && member.linkedin_link.includes('linkedin.com') && (
+                            <a href={member.linkedin_link} className="p-1 md:p-2 rounded-full bg-white/20 backdrop-blur-sm  transition-all">
+                              <FaLinkedin className="w-3 h-3 md:w-4 md:h-4 text-purple-600 dark:text-white" />
+                            </a>
+                          )}
                           <div className="flex items-center gap-1 px-1 md:px-2 py-0 md:py-1 rounded-full">
                             <FaPhone className="h-2.5 w-2.5 md:h-3 md:w-3 text-blue-600 dark:text-blue-400" />
                             <span className="font-medium text-gray-700 dark:text-gray-300 text-xs">{member.contact_no}</span>
@@ -205,7 +213,7 @@ export default function TeamPage() {
                 ))}
               </AnimatePresence>
             </div>
-          </div>
+          </section>
         ))}
       </div>
       <Footer />

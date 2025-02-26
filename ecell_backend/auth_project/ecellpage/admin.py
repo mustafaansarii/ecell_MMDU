@@ -7,6 +7,9 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('team_type',)
     search_fields = ('name', 'role')
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('event_date',)

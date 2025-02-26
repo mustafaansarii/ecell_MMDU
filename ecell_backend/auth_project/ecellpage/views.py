@@ -47,30 +47,8 @@ class ContactSubmissionView(APIView):
 
 class TeamList(APIView):
     def get(self, request):
-        # Use select_related/prefetch_related if there were related models
-        # Use only() to fetch only necessary fields
-        team = Team.objects.all().only(
-            'team_type', 
-            'name', 
-            'course_year', 
-            'role', 
-            'description', 
-            'linkedin_link', 
-            'contact_no', 
-            'img_link'
-        )
-        
-        # Use caching for frequently accessed data
-        cache_key = 'team_list_data'
-        cached_data = cache.get(cache_key)
-        
-        if cached_data:
-            return Response(cached_data)
-            
+        # Simply return all team data without caching
+        team = Team.objects.all()
         serializer = TeamSerializer(team, many=True)
-        
-        # Cache the data for 1 hour (3600 seconds)
-        cache.set(cache_key, serializer.data, timeout=3600)
-        
         return Response(serializer.data)
 
